@@ -17,7 +17,7 @@ import javax.swing.border.TitledBorder;
 import datamodel.Order;
 
 @SuppressWarnings("serial")
-public class DiscountCalculatorPanel extends JPanel {
+public class DiscountCalculatorPanel extends BasePanel {
 
 	private JPanel buttonPanel;
 	private JPanel beforeAfterPanel;
@@ -45,6 +45,8 @@ public class DiscountCalculatorPanel extends JPanel {
 
 	public void setBeforeData(Order o) {
 		beforePriceField.setText(String.valueOf(o.getPriceData().getPrice()));
+		
+		afterPriceField.setText("");
 	}
 	
 	public void setAfterData(Order o) {

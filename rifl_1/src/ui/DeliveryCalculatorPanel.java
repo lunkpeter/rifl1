@@ -21,7 +21,7 @@ import com.jgoodies.forms.factories.FormFactory;
 import com.jgoodies.forms.layout.RowSpec;
 
 @SuppressWarnings("serial")
-public class DeliveryCalculatorPanel extends JPanel {
+public class DeliveryCalculatorPanel extends BasePanel {
 
 	private JPanel buttonPanel;
 	private JPanel beforeAfterPanel;
@@ -49,6 +49,8 @@ public class DeliveryCalculatorPanel extends JPanel {
 
 	public void setBeforeData(Order o) {
 		beforePriceField.setText(String.valueOf(o.getDeliveryData().getDeliveryCost()));
+		
+		afterPriceField.setText("");
 	}
 	
 	public void setAfterData(Order o) {

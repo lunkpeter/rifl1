@@ -25,7 +25,7 @@ import com.jgoodies.forms.factories.FormFactory;
 import com.jgoodies.forms.layout.RowSpec;
 
 @SuppressWarnings("serial")
-public class OrderPriceCalculatorPanel extends JPanel {
+public class OrderPriceCalculatorPanel extends BasePanel {
 
 	private JPanel buttonPanel;
 	private JPanel beforeAfterPanel;

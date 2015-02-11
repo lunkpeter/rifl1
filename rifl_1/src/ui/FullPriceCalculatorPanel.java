@@ -22,7 +22,7 @@ import com.jgoodies.forms.layout.RowSpec;
 import datamodel.Order;
 
 @SuppressWarnings("serial")
-public class FullPriceCalculatorPanel extends JPanel {
+public class FullPriceCalculatorPanel extends BasePanel {
 
 	private JPanel buttonPanel;
 	private JPanel beforeAfterPanel;
