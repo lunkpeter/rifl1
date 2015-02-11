@@ -47,10 +47,11 @@ public class DeliveryCalculatorPanel extends BasePanel {
 		setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Delivery calculation", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
 		setLayout(new BorderLayout(0, 0));
 		
+		worker = new DeliveryWorker(this);
+		worker.execute();
+		
 		setButtonPanel();
 		setBeforeAfterPanel();
-		
-		worker = new DeliveryWorker(this);
 		
 		NextPanels = new ArrayList<BasePanel>();
 		NextPanels.add(fullPriceCalculatorPanel);
@@ -59,16 +60,6 @@ public class DeliveryCalculatorPanel extends BasePanel {
 	public void setBeforeData(final Order o) {
 		beforePriceField.setText(String.valueOf(o.getDeliveryData().getDeliveryCost()));
 		
-		nextButton.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				nextButton.setEnabled(false);
-				
-				for (BasePanel basePanel : NextPanels) {
-					basePanel.setBeforeData(o);
-				}
-			}
-		});
 		
 		afterPriceField.setText("");
 	}
@@ -85,8 +76,14 @@ public class DeliveryCalculatorPanel extends BasePanel {
 		FlowLayout flowLayout = (FlowLayout) buttonPanel.getLayout();
 		flowLayout.setAlignment(FlowLayout.RIGHT);
 		add(buttonPanel, BorderLayout.SOUTH);
-		
+
 		nextButton = new JButton("Next");
+		nextButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				worker.isrunning = true;
+			}
+		});
 		buttonPanel.add(nextButton);
 	}
 	

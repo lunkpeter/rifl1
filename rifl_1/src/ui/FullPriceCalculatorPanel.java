@@ -6,6 +6,7 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -13,6 +14,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.border.TitledBorder;
+
+import workers.FullPriceWorker;
 
 import com.jgoodies.forms.factories.FormFactory;
 import com.jgoodies.forms.layout.ColumnSpec;
@@ -46,8 +49,14 @@ public class FullPriceCalculatorPanel extends BasePanel {
 		setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Full price calculation", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
 		setLayout(new BorderLayout(0, 0));
 		
+		worker = new FullPriceWorker(this);
+		worker.execute();
+		
 		setButtonPanel();
 		setBeforeAfterPanel();
+		
+		
+		NextPanels = new ArrayList<BasePanel>();
 	}
 
 	public void setBeforeData(final Order o) {
@@ -55,16 +64,7 @@ public class FullPriceCalculatorPanel extends BasePanel {
 		
 		beforeDeliveryPriceField.setText(String.valueOf(o.getDeliveryData().getDeliveryCost()));
 		
-		nextButton.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				nextButton.setEnabled(false);
-				
-				for (BasePanel basePanel : NextPanels) {
-					basePanel.setBeforeData(o);
-				}
-			}
-		});
+		
 		
 		afterPriceField.setText("");
 	}
@@ -81,8 +81,13 @@ public class FullPriceCalculatorPanel extends BasePanel {
 		FlowLayout flowLayout = (FlowLayout) buttonPanel.getLayout();
 		flowLayout.setAlignment(FlowLayout.RIGHT);
 		add(buttonPanel, BorderLayout.SOUTH);
-		
 		nextButton = new JButton("Next");
+		nextButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				worker.isrunning = true;
+			}
+		});
 		nextButton.setEnabled(true);
 		buttonPanel.add(nextButton);
 	}

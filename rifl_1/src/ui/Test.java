@@ -12,14 +12,6 @@ import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
 
-import datamodel.CustomerData;
-import datamodel.DeliveryData;
-import datamodel.DeliveryMethod;
-import datamodel.Item;
-import datamodel.Order;
-import datamodel.PriceData;
-import datamodel.Region;
-
 public class Test {
 
 	private JFrame frame;
@@ -71,13 +63,13 @@ public class Test {
 				FormFactory.DEFAULT_ROWSPEC,
 				FormFactory.DEFAULT_ROWSPEC,}));
 		
-		CreateOrderPanel createOrderPanel = new CreateOrderPanel();
 		FullPriceCalculatorPanel fullPriceCalculatorPanel = new FullPriceCalculatorPanel();
 		DeliveryCalculatorPanel deliveryCalculatorPanel = new DeliveryCalculatorPanel(fullPriceCalculatorPanel);
 		NetPriceCalculatorPanel netPriceCalculatorPanel = new NetPriceCalculatorPanel(fullPriceCalculatorPanel);
 		DistancePriceCalculatorPanel distancePriceCalculatorPanel = new DistancePriceCalculatorPanel(deliveryCalculatorPanel);
 		DiscountCalculatorPanel discountCalculatorPanel = new DiscountCalculatorPanel(netPriceCalculatorPanel);
 		OrderPriceCalculatorPanel orderPriceCalculatorPanel = new OrderPriceCalculatorPanel(discountCalculatorPanel, distancePriceCalculatorPanel);
+		CreateOrderPanel createOrderPanel = new CreateOrderPanel(orderPriceCalculatorPanel);
 		
 		scrollablePanel.add(createOrderPanel, "1, 1, left, top");
 		scrollablePanel.add(orderPriceCalculatorPanel, "1, 2, left, center");
@@ -89,21 +81,6 @@ public class Test {
 		
 		JScrollPane scrollPane = new JScrollPane(scrollablePanel);
 		frame.getContentPane().add(scrollPane);
-		
-		CustomerData customerData = new CustomerData("TEST", Region.Central);
-		DeliveryData deliveryData = new DeliveryData(
-				DeliveryMethod.PrivateDelivery);
-		PriceData priceData = new PriceData();
-		Order order = new Order(customerData, deliveryData, priceData);
-		for (int i = 0; i < 10; i++) {
-			order.addItem(new Item(25000, "TEST" + i));
-		}
-		try {
-			orderPriceCalculatorPanel.worker.Queue.put(order);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 
 }
