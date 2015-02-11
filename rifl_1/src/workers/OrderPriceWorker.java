@@ -8,7 +8,7 @@ import datamodel.Order;
 
 public class OrderPriceWorker extends BaseWorker {
 
-	public OrderPriceWorker(BasePanel panel, Order input) {
+	public OrderPriceWorker(BasePanel panel) {
 		super(panel);
 	}
 

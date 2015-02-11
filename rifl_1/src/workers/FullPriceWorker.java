@@ -13,7 +13,7 @@ public class FullPriceWorker extends BaseWorker {
 
 	public BlockingQueue<Order> PriceQueue;
 
-	public FullPriceWorker(BasePanel panel, Order input, Order priceorder) {
+	public FullPriceWorker(BasePanel panel) {
 		super(panel);
 		PriceQueue = new ArrayBlockingQueue<Order>(1, true);
 	}

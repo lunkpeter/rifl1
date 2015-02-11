@@ -18,7 +18,7 @@ public abstract class BaseWorker extends SwingWorker<Order, Order>{
 	public BaseWorker(BasePanel panel) {
 		super();
 		this.panel = panel;
-		Queue = new ArrayBlockingQueue<Order>(1, true);
+		Queue = new ArrayBlockingQueue<Order>(2, true);
 		exit = false; 
 		isrunning = false;
 	}
