@@ -15,7 +15,7 @@ public class FullPriceWorker extends BaseWorker {
 
 	public FullPriceWorker(BasePanel panel) {
 		super(panel);
-		PriceQueue = new ArrayBlockingQueue<Order>(1, true);
+		PriceQueue = new ArrayBlockingQueue<Order>(10, true);
 	}
 
 	@Override
