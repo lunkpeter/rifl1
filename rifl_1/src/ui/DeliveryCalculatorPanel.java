@@ -6,6 +6,7 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -14,6 +15,7 @@ import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.border.TitledBorder;
 
+import workers.DeliveryWorker;
 import datamodel.Order;
 
 import com.jgoodies.forms.layout.FormLayout;
@@ -38,14 +40,20 @@ public class DeliveryCalculatorPanel extends BasePanel {
 
 	/**
 	 * Create the panel.
+	 * @param fullPriceCalculatorPanel 
 	 */
-	public DeliveryCalculatorPanel() {
+	public DeliveryCalculatorPanel(FullPriceCalculatorPanel fullPriceCalculatorPanel) {
 		setBackground(Color.WHITE);
 		setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Delivery calculation", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
 		setLayout(new BorderLayout(0, 0));
 		
 		setButtonPanel();
 		setBeforeAfterPanel();
+		
+		worker = new DeliveryWorker(this);
+		
+		NextPanels = new ArrayList<BasePanel>();
+		NextPanels.add(fullPriceCalculatorPanel);
 	}
 
 	public void setBeforeData(final Order o) {
@@ -79,7 +87,6 @@ public class DeliveryCalculatorPanel extends BasePanel {
 		add(buttonPanel, BorderLayout.SOUTH);
 		
 		nextButton = new JButton("Next");
-		nextButton.setEnabled(false);
 		buttonPanel.add(nextButton);
 	}
 	

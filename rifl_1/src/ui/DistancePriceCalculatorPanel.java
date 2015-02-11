@@ -6,6 +6,7 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -13,6 +14,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.border.TitledBorder;
+
+import workers.DistanceWorker;
 
 import com.jgoodies.forms.factories.FormFactory;
 import com.jgoodies.forms.layout.ColumnSpec;
@@ -40,14 +43,20 @@ public class DistancePriceCalculatorPanel extends BasePanel {
 
 	/**
 	 * Create the panel.
+	 * @param deliveryCalculatorPanel 
 	 */
-	public DistancePriceCalculatorPanel() {
+	public DistancePriceCalculatorPanel(DeliveryCalculatorPanel deliveryCalculatorPanel) {
 		setBackground(Color.WHITE);
 		setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Distance price calculation", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
 		setLayout(new BorderLayout(0, 0));
 		
 		setButtonPanel();
 		setBeforeAfterPanel();
+		
+		worker = new DistanceWorker(this);
+		
+		NextPanels = new ArrayList<BasePanel>();
+		NextPanels.add(deliveryCalculatorPanel);
 	}
 
 	public void setBeforeData(final Order o) {
@@ -83,7 +92,7 @@ public class DistancePriceCalculatorPanel extends BasePanel {
 		add(buttonPanel, BorderLayout.SOUTH);
 		
 		nextButton = new JButton("Next");
-		nextButton.setEnabled(false);
+		nextButton.setEnabled(true);
 		buttonPanel.add(nextButton);
 	}
 	

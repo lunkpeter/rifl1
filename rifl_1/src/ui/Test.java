@@ -12,6 +12,14 @@ import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
 
+import datamodel.CustomerData;
+import datamodel.DeliveryData;
+import datamodel.DeliveryMethod;
+import datamodel.Item;
+import datamodel.Order;
+import datamodel.PriceData;
+import datamodel.Region;
+
 public class Test {
 
 	private JFrame frame;
@@ -64,22 +72,38 @@ public class Test {
 				FormFactory.DEFAULT_ROWSPEC,}));
 		
 		CreateOrderPanel createOrderPanel = new CreateOrderPanel();
-		scrollablePanel.add(createOrderPanel, "1, 1, left, top");
-		OrderPriceCalculatorPanel orderPriceCalculatorPanel = new OrderPriceCalculatorPanel();
-		scrollablePanel.add(orderPriceCalculatorPanel, "1, 2, left, center");
-		DiscountCalculatorPanel discountCalculatorPanel = new DiscountCalculatorPanel();
-		scrollablePanel.add(discountCalculatorPanel, "1, 3, left, center");
-		DistancePriceCalculatorPanel distancePriceCalculatorPanel = new DistancePriceCalculatorPanel();
-		scrollablePanel.add(distancePriceCalculatorPanel, "1, 4, left, center");
-		NetPriceCalculatorPanel netPriceCalculatorPanel = new NetPriceCalculatorPanel();
-		scrollablePanel.add(netPriceCalculatorPanel, "1, 5, left, center");
-		DeliveryCalculatorPanel deliveryCalculatorPanel = new DeliveryCalculatorPanel();
-		scrollablePanel.add(deliveryCalculatorPanel, "1, 6, left, center");
 		FullPriceCalculatorPanel fullPriceCalculatorPanel = new FullPriceCalculatorPanel();
+		DeliveryCalculatorPanel deliveryCalculatorPanel = new DeliveryCalculatorPanel(fullPriceCalculatorPanel);
+		NetPriceCalculatorPanel netPriceCalculatorPanel = new NetPriceCalculatorPanel(fullPriceCalculatorPanel);
+		DistancePriceCalculatorPanel distancePriceCalculatorPanel = new DistancePriceCalculatorPanel(deliveryCalculatorPanel);
+		DiscountCalculatorPanel discountCalculatorPanel = new DiscountCalculatorPanel(netPriceCalculatorPanel);
+		OrderPriceCalculatorPanel orderPriceCalculatorPanel = new OrderPriceCalculatorPanel(discountCalculatorPanel, distancePriceCalculatorPanel);
+		
+		scrollablePanel.add(createOrderPanel, "1, 1, left, top");
+		scrollablePanel.add(orderPriceCalculatorPanel, "1, 2, left, center");
+		scrollablePanel.add(discountCalculatorPanel, "1, 3, left, center");
+		scrollablePanel.add(distancePriceCalculatorPanel, "1, 4, left, center");
+		scrollablePanel.add(netPriceCalculatorPanel, "1, 5, left, center");
+		scrollablePanel.add(deliveryCalculatorPanel, "1, 6, left, center");
 		scrollablePanel.add(fullPriceCalculatorPanel, "1, 7, left, center");
 		
 		JScrollPane scrollPane = new JScrollPane(scrollablePanel);
 		frame.getContentPane().add(scrollPane);
+		
+		CustomerData customerData = new CustomerData("TEST", Region.Central);
+		DeliveryData deliveryData = new DeliveryData(
+				DeliveryMethod.PrivateDelivery);
+		PriceData priceData = new PriceData();
+		Order order = new Order(customerData, deliveryData, priceData);
+		for (int i = 0; i < 10; i++) {
+			order.addItem(new Item(25000, "TEST" + i));
+		}
+		try {
+			orderPriceCalculatorPanel.worker.Queue.put(order);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }
