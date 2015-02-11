@@ -50,10 +50,12 @@ public class DistancePriceCalculatorPanel extends BasePanel {
 		setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Distance price calculation", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
 		setLayout(new BorderLayout(0, 0));
 		
+		worker = new DistanceWorker(this);
+		worker.execute();
+		
 		setButtonPanel();
 		setBeforeAfterPanel();
 		
-		worker = new DistanceWorker(this);
 		
 		NextPanels = new ArrayList<BasePanel>();
 		NextPanels.add(deliveryCalculatorPanel);
@@ -64,16 +66,7 @@ public class DistancePriceCalculatorPanel extends BasePanel {
 		
 		beforeRegionField.setText(o.getCustomerData().getRegion().toString());
 		
-		nextButton.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				nextButton.setEnabled(false);
-				
-				for (BasePanel basePanel : NextPanels) {
-					basePanel.setBeforeData(o);
-				}
-			}
-		});
+		
 		
 		afterPriceField.setText("");
 	}
@@ -90,8 +83,13 @@ public class DistancePriceCalculatorPanel extends BasePanel {
 		FlowLayout flowLayout = (FlowLayout) buttonPanel.getLayout();
 		flowLayout.setAlignment(FlowLayout.RIGHT);
 		add(buttonPanel, BorderLayout.SOUTH);
-		
 		nextButton = new JButton("Next");
+		nextButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				worker.isrunning = true;
+			}
+		});
 		nextButton.setEnabled(true);
 		buttonPanel.add(nextButton);
 	}

@@ -29,8 +29,12 @@ import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
 
+import datamodel.CustomerData;
+import datamodel.DeliveryData;
 import datamodel.DeliveryMethod;
 import datamodel.Item;
+import datamodel.Order;
+import datamodel.PriceData;
 import datamodel.Region;
 
 import java.awt.event.MouseAdapter;
@@ -51,8 +55,9 @@ public class CreateOrderPanel extends JPanel {
 
 	/**
 	 * Create the panel.
+	 * @param orderPriceCalculatorPanel 
 	 */
-	public CreateOrderPanel() {
+	public CreateOrderPanel(final OrderPriceCalculatorPanel orderPriceCalculatorPanel) {
 		items = new ArrayList<Item>();
 		
 		setBackground(Color.WHITE);
@@ -66,6 +71,31 @@ public class CreateOrderPanel extends JPanel {
 		add(buttonPanel, BorderLayout.SOUTH);
 		
 		JButton btnCreateOrder = new JButton("Create order");
+		btnCreateOrder.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				CustomerData customerData = new CustomerData(nameField.getText(), (Region) custRegionCombo.getSelectedItem());
+				DeliveryData deliveryData = new DeliveryData((DeliveryMethod) delMethodCombo.getSelectedItem());
+				PriceData priceData = new PriceData();
+				final Order order = new Order(customerData, deliveryData, priceData);
+				for (Item item : items) {
+					order.addItem(item);
+				}
+				Thread t = new Thread(new Runnable() {
+					
+					@Override
+					public void run() {
+						try {
+							orderPriceCalculatorPanel.worker.Queue.put(order);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+				});
+				t.start();
+			}
+		});
 		buttonPanel.add(btnCreateOrder);
 		
 		JPanel orderPropPanel = new JPanel();

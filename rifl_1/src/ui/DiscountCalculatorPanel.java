@@ -42,10 +42,11 @@ public class DiscountCalculatorPanel extends BasePanel {
 		setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Discount calculation", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
 		setLayout(new BorderLayout(0, 0));
 		
+		worker = new NetPriceWorker(this);
+		worker.execute();
+		
 		setButtonPanel();
 		setBeforeAfterPanel();
-		
-		worker = new NetPriceWorker(this);
 		
 		NextPanels = new ArrayList<BasePanel>();
 		NextPanels.add(netPriceCalculatorPanel);
@@ -54,16 +55,7 @@ public class DiscountCalculatorPanel extends BasePanel {
 	public void setBeforeData(final Order o) {
 		beforePriceField.setText(String.valueOf(o.getPriceData().getPrice()));
 		
-		nextButton.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				nextButton.setEnabled(false);
-				
-				for (BasePanel basePanel : NextPanels) {
-					basePanel.setBeforeData(o);
-				}
-			}
-		});
+		
 		
 		afterPriceField.setText("");
 	}
@@ -80,8 +72,13 @@ public class DiscountCalculatorPanel extends BasePanel {
 		FlowLayout flowLayout = (FlowLayout) buttonPanel.getLayout();
 		flowLayout.setAlignment(FlowLayout.RIGHT);
 		add(buttonPanel, BorderLayout.SOUTH);
-		
 		nextButton = new JButton("Next");
+		nextButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				worker.isrunning = true;
+			}
+		});
 		nextButton.setEnabled(true);
 		buttonPanel.add(nextButton);
 	}

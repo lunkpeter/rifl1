@@ -58,6 +58,7 @@ public class OrderPriceCalculatorPanel extends BasePanel {
 		setBeforeAfterPanel();
 		
 		worker = new OrderPriceWorker(this);
+		worker.execute();
 		
 		NextPanels = new ArrayList<BasePanel>();
 		NextPanels.add(discountCalculatorPanel);
