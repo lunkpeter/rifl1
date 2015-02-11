@@ -1,9 +1,5 @@
 package workers;
 
-import java.util.List;
-
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
 import javax.swing.SwingWorker;
 
 import ui.BasePanel;
