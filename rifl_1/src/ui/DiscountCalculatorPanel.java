@@ -43,8 +43,19 @@ public class DiscountCalculatorPanel extends BasePanel {
 		setBeforeAfterPanel();
 	}
 
-	public void setBeforeData(Order o) {
+	public void setBeforeData(final Order o) {
 		beforePriceField.setText(String.valueOf(o.getPriceData().getPrice()));
+		
+		nextButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				nextButton.setEnabled(false);
+				
+				for (BasePanel basePanel : NextPanels) {
+					basePanel.setBeforeData(o);
+				}
+			}
+		});
 		
 		afterPriceField.setText("");
 	}
@@ -63,12 +74,6 @@ public class DiscountCalculatorPanel extends BasePanel {
 		add(buttonPanel, BorderLayout.SOUTH);
 		
 		nextButton = new JButton("Next");
-		nextButton.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				nextButton.setEnabled(false);
-			}
-		});
 		nextButton.setEnabled(false);
 		buttonPanel.add(nextButton);
 	}

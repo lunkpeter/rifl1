@@ -50,10 +50,23 @@ public class DistancePriceCalculatorPanel extends BasePanel {
 		setBeforeAfterPanel();
 	}
 
-	public void setBeforeData(Order o) {
+	public void setBeforeData(final Order o) {
 		beforePriceField.setText(String.valueOf(o.getDeliveryData().getDeliveryCost()));
 		
 		beforeRegionField.setText(o.getCustomerData().getRegion().toString());
+		
+		nextButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				nextButton.setEnabled(false);
+				
+				for (BasePanel basePanel : NextPanels) {
+					basePanel.setBeforeData(o);
+				}
+			}
+		});
+		
+		afterPriceField.setText("");
 	}
 	
 	public void setAfterData(Order o) {
@@ -70,12 +83,6 @@ public class DistancePriceCalculatorPanel extends BasePanel {
 		add(buttonPanel, BorderLayout.SOUTH);
 		
 		nextButton = new JButton("Next");
-		nextButton.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				nextButton.setEnabled(false);
-			}
-		});
 		nextButton.setEnabled(false);
 		buttonPanel.add(nextButton);
 	}

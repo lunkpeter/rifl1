@@ -15,6 +15,7 @@ import javax.swing.UIManager;
 import javax.swing.border.TitledBorder;
 
 import datamodel.Order;
+
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.factories.FormFactory;
@@ -47,8 +48,19 @@ public class DeliveryCalculatorPanel extends BasePanel {
 		setBeforeAfterPanel();
 	}
 
-	public void setBeforeData(Order o) {
+	public void setBeforeData(final Order o) {
 		beforePriceField.setText(String.valueOf(o.getDeliveryData().getDeliveryCost()));
+		
+		nextButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				nextButton.setEnabled(false);
+				
+				for (BasePanel basePanel : NextPanels) {
+					basePanel.setBeforeData(o);
+				}
+			}
+		});
 		
 		afterPriceField.setText("");
 	}
@@ -67,12 +79,6 @@ public class DeliveryCalculatorPanel extends BasePanel {
 		add(buttonPanel, BorderLayout.SOUTH);
 		
 		nextButton = new JButton("Next");
-		nextButton.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				nextButton.setEnabled(false);
-			}
-		});
 		nextButton.setEnabled(false);
 		buttonPanel.add(nextButton);
 	}

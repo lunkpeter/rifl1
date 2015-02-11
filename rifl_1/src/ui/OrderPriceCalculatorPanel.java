@@ -52,7 +52,7 @@ public class OrderPriceCalculatorPanel extends BasePanel {
 		setBeforeAfterPanel();
 	}
 
-	public void setBeforeData(Order o) {
+	public void setBeforeData(final Order o) {
 		beforePriceField.setText(String.valueOf(o.getPriceData().getPrice()));
 		
 		beforeItemsList.setCellRenderer(new DefaultListCellRenderer() {
@@ -75,6 +75,19 @@ public class OrderPriceCalculatorPanel extends BasePanel {
 			model.addElement(item);
 		}
 		beforeItemsList.setModel(model);
+		
+		nextButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				nextButton.setEnabled(false);
+				
+				for (BasePanel basePanel : NextPanels) {
+					basePanel.setBeforeData(o);
+				}
+			}
+		});
+		
+		afterPriceField.setText("");
 	}
 	
 	public void setAfterData(Order o) {
@@ -91,12 +104,7 @@ public class OrderPriceCalculatorPanel extends BasePanel {
 		add(buttonPanel, BorderLayout.SOUTH);
 		
 		nextButton = new JButton("Next");
-		nextButton.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				nextButton.setEnabled(false);
-			}
-		});
+		
 		nextButton.setEnabled(false);
 		buttonPanel.add(nextButton);
 	}
