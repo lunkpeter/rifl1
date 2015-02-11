@@ -2,34 +2,27 @@ package ui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
-
-import javax.swing.DefaultListCellRenderer;
-import javax.swing.DefaultListModel;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.border.TitledBorder;
-
-import datamodel.Item;
-import datamodel.Order;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.UIManager;
+import javax.swing.border.TitledBorder;
+
+import datamodel.Order;
+
 @SuppressWarnings("serial")
-public class OrderPriceCalculationPanel extends JPanel {
+public class DiscountCalculatorPanel extends JPanel {
 
 	private JPanel buttonPanel;
-	private JPanel editDataPanel;
 	private JPanel beforeAfterPanel;
 	private JPanel beforeDataPanel;
 	private JPanel afterDataPanel;
-	private JButton calculateButton;
-	private JList<Item> beforeItemsList;
 	private JPanel afterPricePanel;
 	private JLabel afterPriceLabel;
 	private JTextField afterPriceField;
@@ -41,37 +34,17 @@ public class OrderPriceCalculationPanel extends JPanel {
 	/**
 	 * Create the panel.
 	 */
-	public OrderPriceCalculationPanel() {
+	public DiscountCalculatorPanel() {
+		setBackground(Color.WHITE);
+		setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Discount calculation", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
 		setLayout(new BorderLayout(0, 0));
 		
 		setButtonPanel();
-		setEditDataPanel();
 		setBeforeAfterPanel();
 	}
 
 	public void setBeforeData(Order o) {
 		beforePriceField.setText(String.valueOf(o.getPriceData().getPrice()));
-		
-		beforeItemsList.setCellRenderer(new DefaultListCellRenderer() {
-
-			@Override
-			public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-				super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-				
-				if(value instanceof Item) {
-					Item item = (Item) value;
-					setText(item.getName()+" ("+item.getPrice()+")");
-				}
-				
-				return this;
-			}
-		});
-		
-		DefaultListModel<Item> model = new DefaultListModel<Item>();
-		for (Item item : o.getItems()) {
-			model.addElement(item);
-		}
-		beforeItemsList.setModel(model);
 	}
 	
 	public void setAfterData(Order o) {
@@ -87,15 +60,6 @@ public class OrderPriceCalculationPanel extends JPanel {
 		flowLayout.setAlignment(FlowLayout.RIGHT);
 		add(buttonPanel, BorderLayout.SOUTH);
 		
-		calculateButton = new JButton("Calculate");
-		calculateButton.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				calculateButton.setEnabled(false);
-			}
-		});
-		buttonPanel.add(calculateButton);
-		
 		nextButton = new JButton("Next");
 		nextButton.addMouseListener(new MouseAdapter() {
 			@Override
@@ -105,12 +69,6 @@ public class OrderPriceCalculationPanel extends JPanel {
 		});
 		nextButton.setEnabled(false);
 		buttonPanel.add(nextButton);
-	}
-	
-	private void setEditDataPanel() {
-		editDataPanel = new JPanel();
-		editDataPanel.setBackground(Color.WHITE);
-		add(editDataPanel, BorderLayout.NORTH);
 	}
 	
 	private void setBeforeAfterPanel() {
@@ -124,9 +82,6 @@ public class OrderPriceCalculationPanel extends JPanel {
 		beforeAfterPanel.add(beforeDataPanel);
 		beforeDataPanel.setBorder(new TitledBorder(null, "Before modification", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		beforeDataPanel.setLayout(new BorderLayout(0, 5));
-		
-		beforeItemsList = new JList<Item>();
-		beforeDataPanel.add(beforeItemsList, BorderLayout.CENTER);
 		
 		beforePricePanel = new JPanel();
 		beforePricePanel.setBackground(Color.WHITE);
