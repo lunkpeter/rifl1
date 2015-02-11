@@ -83,7 +83,7 @@ public class FullPriceCalculatorPanel extends BasePanel {
 		add(buttonPanel, BorderLayout.SOUTH);
 		
 		nextButton = new JButton("Next");
-		nextButton.setEnabled(false);
+		nextButton.setEnabled(true);
 		buttonPanel.add(nextButton);
 	}
 	

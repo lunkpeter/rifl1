@@ -15,10 +15,14 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
 
+import workers.OrderPriceWorker;
 import datamodel.Item;
 import datamodel.Order;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.factories.FormFactory;
@@ -42,14 +46,22 @@ public class OrderPriceCalculatorPanel extends BasePanel {
 
 	/**
 	 * Create the panel.
+	 * @param distancePriceCalculatorPanel 
+	 * @param discountCalculatorPanel 
 	 */
-	public OrderPriceCalculatorPanel() {
+	public OrderPriceCalculatorPanel(DiscountCalculatorPanel discountCalculatorPanel, DistancePriceCalculatorPanel distancePriceCalculatorPanel) {
 		setBackground(Color.WHITE);
 		setBorder(new TitledBorder(null, "Order price calculation", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		setLayout(new BorderLayout(0, 0));
 		
 		setButtonPanel();
 		setBeforeAfterPanel();
+		
+		worker = new OrderPriceWorker(this);
+		
+		NextPanels = new ArrayList<BasePanel>();
+		NextPanels.add(discountCalculatorPanel);
+		NextPanels.add(distancePriceCalculatorPanel);
 	}
 
 	public void setBeforeData(final Order o) {
@@ -76,16 +88,6 @@ public class OrderPriceCalculatorPanel extends BasePanel {
 		}
 		beforeItemsList.setModel(model);
 		
-		nextButton.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				nextButton.setEnabled(false);
-				
-				for (BasePanel basePanel : NextPanels) {
-					basePanel.setBeforeData(o);
-				}
-			}
-		});
 		
 		afterPriceField.setText("");
 	}
@@ -104,8 +106,12 @@ public class OrderPriceCalculatorPanel extends BasePanel {
 		add(buttonPanel, BorderLayout.SOUTH);
 		
 		nextButton = new JButton("Next");
-		
-		nextButton.setEnabled(false);
+		nextButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				worker.isrunning = true;
+			}
+		});
 		buttonPanel.add(nextButton);
 	}
 	
