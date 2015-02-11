@@ -17,7 +17,7 @@ public class PriceData {
 	}
 
 
-	public void setPrice(double price) {
+	public synchronized void setPrice(double price) {
 		this.price = price;
 	}
 
@@ -27,7 +27,7 @@ public class PriceData {
 	}
 
 
-	public void setNetPrice(double netPrice) {
+	public synchronized void setNetPrice(double netPrice) {
 		this.netPrice = netPrice;
 	}
 	

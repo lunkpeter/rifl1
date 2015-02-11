@@ -17,7 +17,7 @@ public class CustomerData {
 	}
 
 
-	public void setName(String name) {
+	public synchronized void setName(String name) {
 		this.name = name;
 	}
 
@@ -27,7 +27,7 @@ public class CustomerData {
 	}
 
 
-	public void setRegion(Region region) {
+	public synchronized void setRegion(Region region) {
 		this.region = region;
 	}
 	

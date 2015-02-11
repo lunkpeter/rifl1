@@ -23,7 +23,7 @@ public class Order extends Element {
 		return customerData;
 	}
 
-	public void setCustomerData(CustomerData customerData) {
+	public synchronized void setCustomerData(CustomerData customerData) {
 		this.customerData = customerData;
 	}
 
@@ -31,7 +31,7 @@ public class Order extends Element {
 		return deliveryData;
 	}
 
-	public void setDeliveryData(DeliveryData deliveryData) {
+	public synchronized void setDeliveryData(DeliveryData deliveryData) {
 		this.deliveryData = deliveryData;
 	}
 
@@ -39,7 +39,7 @@ public class Order extends Element {
 		return priceData;
 	}
 
-	public void setPriceData(PriceData priceData) {
+	public synchronized void setPriceData(PriceData priceData) {
 		this.priceData = priceData;
 	}
 
@@ -47,17 +47,17 @@ public class Order extends Element {
 		return items;
 	}
 
-	public void setItems(List<Item> items) {
+	public synchronized void setItems(List<Item> items) {
 		this.items = items;
 	}
 	
-	public void addItem(Item item){
+	public synchronized void addItem(Item item){
 		if(!items.contains(item)){
 			items.add(item);
 		}
 	}
 	
-	public void removeItem(Item item){
+	public synchronized void removeItem(Item item){
 		if(items.contains(item)){
 			items.remove(item);
 		}

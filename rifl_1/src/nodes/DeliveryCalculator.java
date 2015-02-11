@@ -1,12 +1,30 @@
 package nodes;
 
+import java.util.List;
+
 import datamodel.DeliveryData;
+import datamodel.Order;
 import datamodel.PriceData;
 
-public class DeliveryCalculator {
+public class DeliveryCalculator extends Node{
+	
 	private static double priceThreshold = 50000;
 	
-	public void calculateDelivery(DeliveryData data, PriceData priceData) {
+	public DeliveryCalculator(Node next){
+		super(next);
+	}
+	
+	public DeliveryCalculator(List<Node> next){
+		super(next);
+	}
+	
+	
+	public DeliveryCalculator() {
+		super();
+	}
+
+	private void calculateDelivery(DeliveryData data, PriceData priceData) throws InterruptedException {
+		Thread.sleep(500);
 		double tempPrice = data.getDeliveryCost();
 		switch (data.getDeliveryMethod()) {
 		case PostalDelivery:
@@ -29,6 +47,24 @@ public class DeliveryCalculator {
 
 		default:
 			break;
+		}
+	}
+
+	@Override
+	public void run() {
+		while (!exit) {
+			Order order;
+			try {
+				order = Queue.take();
+				System.out.println("calculating delivery");
+				calculateDelivery(order.getDeliveryData(), order.getPriceData());
+				for (Node node : NextNodes) {
+					node.Queue.put(order);
+				}
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			
 		}
 	}
 }

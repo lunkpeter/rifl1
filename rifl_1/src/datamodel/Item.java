@@ -14,7 +14,7 @@ public class Item extends Element{
 		return price;
 	}
 
-	public void setPrice(double price) {
+	public synchronized void setPrice(double price) {
 		this.price = price;
 	}
 
@@ -22,7 +22,7 @@ public class Item extends Element{
 		return name;
 	}
 
-	public void setName(String name) {
+	public synchronized void setName(String name) {
 		this.name = name;
 	}
 	

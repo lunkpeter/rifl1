@@ -14,7 +14,7 @@ public class DeliveryData {
 		return deliveryCost;
 	}
 
-	public void setDeliveryCost(double deliveryCost) {
+	public synchronized void setDeliveryCost(double deliveryCost) {
 		this.deliveryCost = deliveryCost;
 	}
 
@@ -22,7 +22,7 @@ public class DeliveryData {
 		return deliveryMethod;
 	}
 
-	public void setDeliveryMethod(DeliveryMethod deliveryMethod) {
+	public synchronized void setDeliveryMethod(DeliveryMethod deliveryMethod) {
 		this.deliveryMethod = deliveryMethod;
 	}
 	
