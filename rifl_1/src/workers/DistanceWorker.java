@@ -1,40 +1,46 @@
 package workers;
 
-import javax.swing.SwingWorker;
+import java.util.List;
 
 import ui.BasePanel;
 import datamodel.CustomerData;
 import datamodel.DeliveryData;
 import datamodel.Order;
 
-public class DistanceWorker extends SwingWorker<Order, String> {
+public class DistanceWorker extends BaseWorker {
 
-	private Order order;
-	private BasePanel panel;
 	private static double northDeliveryCost = 1500;
 	private static double southDeliveryCost = 2500;
 	private static double eastDeliveryCost = 3500;
 	private static double westDeliveryCost = 4500;
 	private static double centralDeliveryCost = 500;
 
-	public DistanceWorker(BasePanel panel, Order input) {
-		super();
-		this.order = input;
-		this.panel = panel;
+	public DistanceWorker(BasePanel panel) {
+		super(panel);
 	}
 
 	@Override
-	protected Order doInBackground() throws Exception {
-		calculateDistance(order.getDeliveryData(), order.getCustomerData());
+	protected Order doInBackground() {
+		while (!exit) {
+			Order order;
+			try {
+				order = Queue.take();
+				System.out.println("calculating distance");
+				calculateDistance(order.getDeliveryData(), order.getCustomerData());
+				for (BasePanel panel : panel.NextPanels) {
+					BaseWorker worker = panel.worker;
+					worker.Queue.put(order);
+				}
+				publish(order);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			
 
-		return order;
+		}
+		return null;
 	}
 
-		
-	@Override
-    public void done() {
-        panel.setAfterData(order);
-    }
 	
 	private void calculateDistance(DeliveryData deliveryData,
 			CustomerData customerData) throws InterruptedException {
@@ -58,6 +64,16 @@ public class DistanceWorker extends SwingWorker<Order, String> {
 
 		default:
 			break;
+		}
+	}
+
+	@Override
+	protected void process(List<Order> chunks) {
+		for (Order order : chunks) {
+			 panel.setAfterData(order);
+			 for (BasePanel panel : panel.NextPanels) {
+				panel.setBeforeData(order);
+			}
 		}
 	}
 

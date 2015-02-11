@@ -1,35 +1,41 @@
 package workers;
 
-import javax.swing.SwingWorker;
+import java.util.List;
 
 import ui.BasePanel;
 import datamodel.Order;
 import datamodel.PriceData;
 
-public class DiscountWorker extends SwingWorker<Order, String>{
-	private Order order;
-	private BasePanel panel;
+public class DiscountWorker extends BaseWorker{
 	private static double priceThreshold1 = 100000;
 	private static double priceThreshold2 = 200000;
 
-	public DiscountWorker(BasePanel panel, Order input) {
-		super();
-		this.order = input;
-		this.panel = panel;
+	public DiscountWorker(BasePanel panel) {
+		super(panel);
+
 	}
 
 	@Override
-	protected Order doInBackground() throws Exception {
-		caclulateDiscount(order.getPriceData());
-
-		return order;
+	protected Order doInBackground() {
+		while (!exit) {
+			Order order;
+			try {
+				order = Queue.take();
+				System.out.println("calculating discount");
+				caclulateDiscount(order.getPriceData());
+				for (BasePanel panel : panel.NextPanels) {
+					BaseWorker worker = panel.worker;
+					worker.Queue.put(order);
+				}
+				publish(order);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			
+		}
+		return null;
 	}
 
-		
-	@Override
-    public void done() {
-        panel.setAfterData(order);
-    }
 	
 	private void caclulateDiscount(PriceData data) throws InterruptedException{
 		double tempPrice = data.getPrice();
@@ -42,5 +48,15 @@ public class DiscountWorker extends SwingWorker<Order, String>{
 			}
 		}
 		
+	}
+
+	@Override
+	protected void process(List<Order> chunks) {
+		for (Order order : chunks) {
+			 panel.setAfterData(order);
+			 for (BasePanel panel : panel.NextPanels) {
+				panel.setBeforeData(order);
+			}
+		}
 	}
 }

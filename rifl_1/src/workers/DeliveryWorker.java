@@ -1,37 +1,59 @@
 package workers;
 
-import javax.swing.SwingWorker;
+import java.util.List;
 
 import ui.BasePanel;
 import datamodel.DeliveryData;
 import datamodel.Order;
 import datamodel.PriceData;
 
-public class DeliveryWorker extends SwingWorker<Order, String> {
+public class DeliveryWorker extends BaseWorker {
 
-	private Order order;
-	private BasePanel panel;
 	private static double priceThreshold = 50000;
 
-	public DeliveryWorker(BasePanel panel, Order input) {
-		super();
-		this.order = input;
-		this.panel = panel;
+	public DeliveryWorker(BasePanel panel) {
+		super(panel);
+
 	}
 
 	@Override
-	protected Order doInBackground() throws Exception {
-		calculateDelivery(order.getDeliveryData(), order.getPriceData());
-
-		return order;
+	protected Order doInBackground(){
+		while (!exit) {
+			Order order;
+			try {
+				order = Queue.take();
+				System.out.println("calculating delivery");
+				calculateDelivery(order.getDeliveryData(), order.getPriceData());
+				for (BasePanel panel : panel.NextPanels) {
+					BaseWorker worker = panel.worker;
+					if(worker instanceof FullPriceWorker){
+						((FullPriceWorker)worker).Queue.put(order);
+					}else{
+						worker.Queue.put(order);
+					}
+				}
+				
+				
+				publish(order);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			
+		}
+		return null;
 	}
 
+	@Override
+	protected void process(List<Order> chunks) {
+		for (Order order : chunks) {
+			 panel.setAfterData(order);
+			 for (BasePanel panel : panel.NextPanels) {
+				panel.setBeforeData(order);
+			}
+		}
 		
-	@Override
-    public void done() {
-        panel.setAfterData(order);
-    }
-	
+	}
+
 	private void calculateDelivery(DeliveryData data, PriceData priceData)
 			throws InterruptedException {
 		Thread.sleep(500);
@@ -59,5 +81,7 @@ public class DeliveryWorker extends SwingWorker<Order, String> {
 			break;
 		}
 	}
+
+
 
 }

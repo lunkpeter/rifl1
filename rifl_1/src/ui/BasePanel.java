@@ -15,6 +15,7 @@ public abstract class BasePanel extends JPanel{
 	
 	
 	
+	
 	public abstract void setBeforeData(Order o);
 	public abstract void setAfterData(Order o);
 }

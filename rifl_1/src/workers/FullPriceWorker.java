@@ -1,38 +1,43 @@
 package workers;
 
-import javax.swing.SwingWorker;
+import java.util.List;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 
 import ui.BasePanel;
 import datamodel.DeliveryData;
 import datamodel.Order;
 import datamodel.PriceData;
 
-public class FullPriceWorker extends SwingWorker<Order, String> {
+public class FullPriceWorker extends BaseWorker {
 
-	private Order order;
-	private Order priceorder;
-	private BasePanel panel;
+	public BlockingQueue<Order> PriceQueue;
 
 
 	public FullPriceWorker(BasePanel panel, Order input, Order priceorder) {
-		super();
-		this.order = input;
-		this.priceorder = priceorder;
-		this.panel = panel;
+		super(panel);
+		PriceQueue = new ArrayBlockingQueue<Order>(1, true);
 	}
 
 	@Override
-	protected Order doInBackground() throws Exception {
-		calculateFullPrice(order.getDeliveryData(), priceorder.getPriceData());
-
-		return order;
+	protected Order doInBackground(){
+		while (!exit) {
+			Order delivorder;
+			Order priceorder;
+			try {
+				delivorder = Queue.take();
+				priceorder = PriceQueue.take();
+				System.out.println("calculating full price");
+				calculateFullPrice(delivorder.getDeliveryData(), priceorder.getPriceData());
+				publish(priceorder);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		return null;
 	}
 
 		
-	@Override
-    public void done() {
-        panel.setAfterData(order);
-    }
 	
 	private void calculateFullPrice(DeliveryData deliveryData, PriceData priceData) throws InterruptedException{
 		Thread.sleep(500);
@@ -41,6 +46,13 @@ public class FullPriceWorker extends SwingWorker<Order, String> {
 		
 		priceData.setPrice(tempPrice+deliveryData.getDeliveryCost());
 		priceData.setNetPrice(tempNetPrice+deliveryData.getDeliveryCost());
+	}
+
+	@Override
+	protected void process(List<Order> chunks) {
+		for (Order order : chunks) {
+			 panel.setAfterData(order);
+		}
 	}
 
 }
