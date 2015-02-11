@@ -5,12 +5,12 @@ import java.util.concurrent.BlockingQueue;
 
 import javax.swing.JPanel;
 
+import workers.BaseWorker;
 import datamodel.Order;
 
 public abstract class BasePanel extends JPanel{
-	public BlockingQueue<Order> Queue;
 	public List<BasePanel> NextPanels;
-	
+	public BaseWorker worker;
 	
 	
 	
