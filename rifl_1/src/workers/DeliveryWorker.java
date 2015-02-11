@@ -39,6 +39,12 @@ public class DeliveryWorker extends BaseWorker {
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
+			}else {
+				try {
+					Thread.sleep(50);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 			}
 
 		}

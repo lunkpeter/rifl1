@@ -38,6 +38,12 @@ public class DistanceWorker extends BaseWorker {
 					e.printStackTrace();
 				}
 
+			}else {
+				try {
+					Thread.sleep(50);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 		return null;

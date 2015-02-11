@@ -29,6 +29,12 @@ public class OrderPriceWorker extends BaseWorker {
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
+			}else {
+				try {
+					Thread.sleep(50);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 		return null;
