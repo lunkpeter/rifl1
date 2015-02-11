@@ -17,28 +17,30 @@ public class DeliveryWorker extends BaseWorker {
 	}
 
 	@Override
-	protected Order doInBackground(){
+	protected Order doInBackground() {
 		while (!exit) {
-			Order order;
-			try {
-				order = Queue.take();
-				System.out.println("calculating delivery");
-				calculateDelivery(order.getDeliveryData(), order.getPriceData());
-				for (BasePanel panel : panel.NextPanels) {
-					BaseWorker worker = panel.worker;
-					if(worker instanceof FullPriceWorker){
-						((FullPriceWorker)worker).Queue.put(order);
-					}else{
-						worker.Queue.put(order);
+			if (isrunning) {
+				Order order;
+				try {
+					order = Queue.take();
+					System.out.println("calculating delivery");
+					calculateDelivery(order.getDeliveryData(),
+							order.getPriceData());
+					for (BasePanel panel : panel.NextPanels) {
+						BaseWorker worker = panel.worker;
+						if (worker instanceof FullPriceWorker) {
+							((FullPriceWorker) worker).Queue.put(order);
+						} else {
+							worker.Queue.put(order);
+						}
 					}
+
+					publish(order);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
 				}
-				
-				
-				publish(order);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
 			}
-			
+
 		}
 		return null;
 	}
@@ -46,12 +48,12 @@ public class DeliveryWorker extends BaseWorker {
 	@Override
 	protected void process(List<Order> chunks) {
 		for (Order order : chunks) {
-			 panel.setAfterData(order);
-			 for (BasePanel panel : panel.NextPanels) {
+			panel.setAfterData(order);
+			for (BasePanel panel : panel.NextPanels) {
 				panel.setBeforeData(order);
 			}
 		}
-		
+
 	}
 
 	private void calculateDelivery(DeliveryData data, PriceData priceData)
@@ -81,7 +83,5 @@ public class DeliveryWorker extends BaseWorker {
 			break;
 		}
 	}
-
-
 
 }

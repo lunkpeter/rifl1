@@ -22,26 +22,27 @@ public class DistanceWorker extends BaseWorker {
 	@Override
 	protected Order doInBackground() {
 		while (!exit) {
-			Order order;
-			try {
-				order = Queue.take();
-				System.out.println("calculating distance");
-				calculateDistance(order.getDeliveryData(), order.getCustomerData());
-				for (BasePanel panel : panel.NextPanels) {
-					BaseWorker worker = panel.worker;
-					worker.Queue.put(order);
+			if (isrunning) {
+				Order order;
+				try {
+					order = Queue.take();
+					System.out.println("calculating distance");
+					calculateDistance(order.getDeliveryData(),
+							order.getCustomerData());
+					for (BasePanel panel : panel.NextPanels) {
+						BaseWorker worker = panel.worker;
+						worker.Queue.put(order);
+					}
+					publish(order);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
 				}
-				publish(order);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			
 
+			}
 		}
 		return null;
 	}
 
-	
 	private void calculateDistance(DeliveryData deliveryData,
 			CustomerData customerData) throws InterruptedException {
 		Thread.sleep(500);
@@ -70,8 +71,8 @@ public class DistanceWorker extends BaseWorker {
 	@Override
 	protected void process(List<Order> chunks) {
 		for (Order order : chunks) {
-			 panel.setAfterData(order);
-			 for (BasePanel panel : panel.NextPanels) {
+			panel.setAfterData(order);
+			for (BasePanel panel : panel.NextPanels) {
 				panel.setBeforeData(order);
 			}
 		}
