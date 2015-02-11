@@ -60,6 +60,7 @@ public class FullPriceWorker extends BaseWorker {
 		for (Order order : chunks) {
 			panel.setAfterData(order);
 		}
+		isrunning = false;
 	}
 
 }

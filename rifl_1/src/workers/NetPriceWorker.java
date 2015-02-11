@@ -60,7 +60,7 @@ public class NetPriceWorker extends BaseWorker {
 				panel.setBeforeData(order);
 			}
 		}
-
+		isrunning = false;
 	}
 
 }

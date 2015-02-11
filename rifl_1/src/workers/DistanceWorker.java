@@ -82,6 +82,7 @@ public class DistanceWorker extends BaseWorker {
 				panel.setBeforeData(order);
 			}
 		}
+		isrunning = false;
 	}
 
 }

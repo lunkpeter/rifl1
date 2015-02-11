@@ -31,7 +31,7 @@ public class OrderPriceWorker extends BaseWorker {
 				}
 			}else {
 				try {
-					Thread.sleep(50);
+					Thread.sleep(50 );
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
@@ -58,6 +58,7 @@ public class OrderPriceWorker extends BaseWorker {
 				panel.setBeforeData(order);
 			}
 		}
+		isrunning = false;
 
 	}
 

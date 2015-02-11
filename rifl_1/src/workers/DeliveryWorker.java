@@ -59,6 +59,7 @@ public class DeliveryWorker extends BaseWorker {
 				panel.setBeforeData(order);
 			}
 		}
+		isrunning = false;
 
 	}
 

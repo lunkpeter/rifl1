@@ -64,5 +64,6 @@ public class DiscountWorker extends BaseWorker {
 				panel.setBeforeData(order);
 			}
 		}
+		isrunning = false;
 	}
 }
