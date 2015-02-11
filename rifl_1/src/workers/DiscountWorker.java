@@ -28,6 +28,7 @@ public class DiscountWorker extends BaseWorker {
 						BaseWorker worker = panel.worker;
 						worker.Queue.put(order);
 					}
+					isrunning = false;
 					publish(order);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
@@ -64,6 +65,6 @@ public class DiscountWorker extends BaseWorker {
 				panel.setBeforeData(order);
 			}
 		}
-		isrunning = false;
+		
 	}
 }

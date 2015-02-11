@@ -33,6 +33,7 @@ public class DistanceWorker extends BaseWorker {
 						BaseWorker worker = panel.worker;
 						worker.Queue.put(order);
 					}
+					isrunning = false;
 					publish(order);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
@@ -82,7 +83,7 @@ public class DistanceWorker extends BaseWorker {
 				panel.setBeforeData(order);
 			}
 		}
-		isrunning = false;
+		
 	}
 
 }

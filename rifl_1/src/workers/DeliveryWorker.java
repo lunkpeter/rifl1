@@ -34,7 +34,7 @@ public class DeliveryWorker extends BaseWorker {
 							worker.Queue.put(order);
 						}
 					}
-
+					isrunning = false;
 					publish(order);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
@@ -59,7 +59,7 @@ public class DeliveryWorker extends BaseWorker {
 				panel.setBeforeData(order);
 			}
 		}
-		isrunning = false;
+		
 
 	}
 

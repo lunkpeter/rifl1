@@ -30,6 +30,7 @@ public class FullPriceWorker extends BaseWorker {
 					System.out.println("calculating full price");
 					calculateFullPrice(delivorder.getDeliveryData(),
 							priceorder.getPriceData());
+					isrunning = false;
 					publish(priceorder);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
@@ -60,7 +61,6 @@ public class FullPriceWorker extends BaseWorker {
 		for (Order order : chunks) {
 			panel.setAfterData(order);
 		}
-		isrunning = false;
 	}
 
 }

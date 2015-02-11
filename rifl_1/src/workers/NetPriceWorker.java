@@ -31,7 +31,7 @@ public class NetPriceWorker extends BaseWorker {
 							worker.Queue.put(order);
 						}
 					}
-
+					isrunning = false;
 					publish(order);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
@@ -60,7 +60,6 @@ public class NetPriceWorker extends BaseWorker {
 				panel.setBeforeData(order);
 			}
 		}
-		isrunning = false;
 	}
 
 }
