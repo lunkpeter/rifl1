@@ -19,7 +19,7 @@ public class OrderPriceWorker extends BaseWorker {
 				Order order;
 				try {
 					order = Queue.take();
-					System.out.println("calculating order price");
+					//System.out.println("calculating order price");
 					calculateOrderPrice(order);
 					for (BasePanel panel : panel.NextPanels) {
 						BaseWorker worker = panel.worker;

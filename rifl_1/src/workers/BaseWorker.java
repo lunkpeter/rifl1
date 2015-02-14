@@ -22,10 +22,6 @@ public abstract class BaseWorker extends SwingWorker<Order, Order>{
 		exit = false; 
 		isrunning = false;
 	}
-	
-	
-	
-
 
 	@Override
 	protected abstract Order doInBackground();
