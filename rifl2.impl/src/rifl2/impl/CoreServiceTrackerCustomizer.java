@@ -1,4 +1,4 @@
-package rifl2.core;
+package rifl2.impl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +9,7 @@ import org.osgi.framework.ServiceReference;
 
 import org.osgi.util.tracker.ServiceTrackerCustomizer;
 
+import rifl2.core.CoreCommand;
 import rifl2.interfaces.ICalculator;
 import rifl2.interfaces.IDeliveryCalculator;
 import rifl2.interfaces.IDiscountCalculator;
@@ -30,6 +31,31 @@ public class CoreServiceTrackerCustomizer implements ServiceTrackerCustomizer {
 	
 	
 
+	public List<IOrderPriceCalculator> getOrdercalc() {
+		return ordercalc;
+	}
+
+	public List<IDeliveryCalculator> getDelivcalc() {
+		return delivcalc;
+	}
+
+	public List<IDiscountCalculator> getDiscountcalc() {
+		return discountcalc;
+	}
+
+	public List<IDistanceCalculator> getDistancecalc() {
+		return distancecalc;
+	}
+
+	public List<IFullPriceCalculator> getFullpricecalc() {
+		return fullpricecalc;
+	}
+
+	public List<INetPriceCalculator> getNetpricecalc() {
+		return netpricecalc;
+	}
+
+
 	public CoreServiceTrackerCustomizer(BundleContext context) {
 		this.context = context;
 		ordercalc = new ArrayList<IOrderPriceCalculator>();
@@ -38,32 +64,28 @@ public class CoreServiceTrackerCustomizer implements ServiceTrackerCustomizer {
 		distancecalc = new ArrayList<IDistanceCalculator>();
 		fullpricecalc = new ArrayList<IFullPriceCalculator>();
 		netpricecalc = new ArrayList<INetPriceCalculator>();
+		command = new ArrayList<CoreCommand>();
 	}
 
 	@Override
 	public Object addingService(ServiceReference reference) {
-		ICalculator service = (ICalculator) context.getService(reference);
+		
+		Object service = context.getService(reference);
 		if(service instanceof CoreCommand){
 			command.add((CoreCommand) service);
+			try {
+				command.get(0).setDeliveryService(delivcalc.get(0));
+				command.get(0).setOrderpriceService(ordercalc.get(0));
+				command.get(0).setDiscountService(discountcalc.get(0));
+				command.get(0).setDistanceService(distancecalc.get(0));
+				command.get(0).setFullPriceService(fullpricecalc.get(0));
+				command.get(0).setNetpriceService(netpricecalc.get(0));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
 		}
-		if(service instanceof IOrderPriceCalculator){
-			ordercalc.add((IOrderPriceCalculator) service);
-		}
-		if(service instanceof IDeliveryCalculator){
-			delivcalc.add((IDeliveryCalculator) service);
-		}
-		if(service instanceof IDiscountCalculator){
-			discountcalc.add((IDiscountCalculator) service);
-		}
-		if(service instanceof IDistanceCalculator){
-			distancecalc.add((IDistanceCalculator) service);
-		}
-		if(service instanceof IFullPriceCalculator){
-			fullpricecalc.add((IFullPriceCalculator) service);
-		}
-		if(service instanceof INetPriceCalculator){
-			netpricecalc.add((INetPriceCalculator) service);
-		}
+		
 		return service;
 	}
 

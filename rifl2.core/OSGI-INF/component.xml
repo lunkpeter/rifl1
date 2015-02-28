@@ -3,7 +3,7 @@
    <implementation class="rifl2.core.CoreCommand"/>
     <property name="osgi.command.scope" type="String" value="simp"/>
  <property name="osgi.command.function" type="String">
- coreCommand
+ step
  </property>
  <service>
     <provide interface="rifl2.core.CoreCommand"/>

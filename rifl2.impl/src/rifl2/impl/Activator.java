@@ -4,14 +4,10 @@ import org.apache.felix.service.command.Descriptor;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
+import org.osgi.util.tracker.ServiceTracker;
+import org.osgi.util.tracker.ServiceTrackerCustomizer;
 
-import rifl2.datamodel.CustomerData;
-import rifl2.datamodel.DeliveryData;
-import rifl2.datamodel.DeliveryMethod;
-import rifl2.datamodel.Item;
-import rifl2.datamodel.Order;
-import rifl2.datamodel.PriceData;
-import rifl2.datamodel.Region;
+import rifl2.core.CoreCommand;
 import rifl2.interfaces.IDeliveryCalculator;
 import rifl2.interfaces.IDiscountCalculator;
 import rifl2.interfaces.IDistanceCalculator;
@@ -20,75 +16,18 @@ import rifl2.interfaces.INetPriceCalculator;
 import rifl2.interfaces.IOrderPriceCalculator;
 
 public class Activator implements BundleActivator {
-	
-	private static IFullPriceCalculator fullPriceService;
-	private static IDeliveryCalculator deliveryService;
-	private static INetPriceCalculator netpriceService;
-	private static IDistanceCalculator distanceService;
-	private static IDiscountCalculator discountService;
-	private static OrderPriceCalculator orderpriceService;
-	
+
+	private IFullPriceCalculator fullPriceService;
+	private IDeliveryCalculator deliveryService;
+	private INetPriceCalculator netpriceService;
+	private IDistanceCalculator distanceService;
+	private IDiscountCalculator discountService;
+	private OrderPriceCalculator orderpriceService;
 
 	private ServiceRegistration registration;
-	private static int step = 0;
+	ServiceTracker serviceTracker;
 
 	private static BundleContext context;
-
-	@Descriptor(value = "A simple command that demonstrates OSGi felix console.")
-	public void step() {
-
-		switch (step) {
-		case 0:
-			orderpriceService.init();
-			discountService.init();
-			distanceService.init();
-			netpriceService.init();
-			deliveryService.init();
-			fullPriceService.init();
-			
-			CustomerData customerData = new CustomerData("TEST", Region.Central);
-			DeliveryData deliveryData = new DeliveryData(
-					DeliveryMethod.PrivateDelivery);
-			PriceData priceData = new PriceData();
-			Order order = new Order(customerData, deliveryData, priceData);
-			for (int i = 0; i < 10; i++) {
-				order.addItem(new Item(25000, "TEST" + i));
-			}
-
-			orderpriceService.enQueue(order);
-			break;
-		case 1:
-			orderpriceService.setRunning(true);
-			
-			break;
-		case 2:
-			discountService.setRunning(true);
-			
-			break;
-		case 3:
-			distanceService.setRunning(true);
-			
-			break;
-
-		case 4:
-			netpriceService.setRunning(true);
-			
-			break;
-		case 5:
-			deliveryService.setRunning(true);
-			
-			break;
-		case 6:
-			fullPriceService.setRunning(true);
-			break;
-
-
-		default:
-			step = -1;
-			break;
-		}
-		step++;
-	}
 
 	static BundleContext getContext() {
 		return context;
@@ -140,10 +79,18 @@ public class Activator implements BundleActivator {
 				IOrderPriceCalculator.class.getName(), orderpriceService, null);
 		System.out.println("IOrderPriceCalculator service is registered!");
 
-		
+		CoreServiceTrackerCustomizer customizer = new CoreServiceTrackerCustomizer(
+				context);
+		customizer.getOrdercalc().add(orderpriceService);
+		customizer.getDelivcalc().add(deliveryService);
+		customizer.getDistancecalc().add(distanceService);
+		customizer.getDiscountcalc().add(discountService);
+		customizer.getFullpricecalc().add(fullPriceService);
+		customizer.getNetpricecalc().add(netpriceService);
 
-
-		
+		serviceTracker = new ServiceTracker(context,
+				CoreCommand.class.getName(), customizer);
+		serviceTracker.open();
 
 	}
 
@@ -155,6 +102,7 @@ public class Activator implements BundleActivator {
 	 */
 	public void stop(BundleContext bundleContext) throws Exception {
 		Activator.context = null;
+		serviceTracker.close();
 	}
 
 }
