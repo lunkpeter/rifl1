@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="rifl2.core">
+   <implementation class="rifl2.core.CoreCommand"/>
+    <property name="osgi.command.scope" type="String" value="simp"/>
+ <property name="osgi.command.function" type="String">
+ coreCommand
+ </property>
+ <service>
+    <provide interface="rifl2.core.CoreCommand"/>
+ </service>
+</scr:component>
