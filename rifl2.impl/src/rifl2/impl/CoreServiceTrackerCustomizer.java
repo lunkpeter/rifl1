@@ -5,12 +5,9 @@ import java.util.List;
 
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
-
-
 import org.osgi.util.tracker.ServiceTrackerCustomizer;
 
 import rifl2.core.CoreCommand;
-import rifl2.interfaces.ICalculator;
 import rifl2.interfaces.IDeliveryCalculator;
 import rifl2.interfaces.IDiscountCalculator;
 import rifl2.interfaces.IDistanceCalculator;

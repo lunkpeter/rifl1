@@ -16,6 +16,10 @@ import rifl2.interfaces.IFullPriceCalculator;
 import rifl2.interfaces.INetPriceCalculator;
 import rifl2.interfaces.IOrderPriceCalculator;
 
+/**
+ * GoGo command class. The user can use our order calculator through this class.
+ *
+ */
 public class CoreCommand {
 	
 	
@@ -28,6 +32,9 @@ public class CoreCommand {
 	
 	private int step = 0;
 
+	/**
+	 * The only command for the user. The user can step our work flow.
+	 */
 	@Descriptor(value = "RIFL command")
 	public void step() {
 		try {

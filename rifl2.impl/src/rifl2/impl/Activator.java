@@ -1,11 +1,8 @@
 package rifl2.impl;
 
-import org.apache.felix.service.command.Descriptor;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.ServiceRegistration;
 import org.osgi.util.tracker.ServiceTracker;
-import org.osgi.util.tracker.ServiceTrackerCustomizer;
 
 import rifl2.core.CoreCommand;
 import rifl2.interfaces.IDeliveryCalculator;
@@ -24,7 +21,6 @@ public class Activator implements BundleActivator {
 	private IDiscountCalculator discountService;
 	private OrderPriceCalculator orderpriceService;
 
-	private ServiceRegistration registration;
 	ServiceTracker serviceTracker;
 
 	private static BundleContext context;
@@ -44,38 +40,38 @@ public class Activator implements BundleActivator {
 		Activator.context = bundleContext;
 
 		fullPriceService = new FullPriceCalculator();
-		registration = context.registerService(
+		context.registerService(
 				IFullPriceCalculator.class.getName(), fullPriceService, null);
 		System.out.println("IFullPriceCalculator service is registered!");
 
 		deliveryService = new DeliveryCalculator();
 		deliveryService.setFullPrice(fullPriceService);
-		registration = context.registerService(
+		context.registerService(
 				IDeliveryCalculator.class.getName(), deliveryService, null);
 		System.out.println("IDeliveryCalculator service is registered!");
 
 		netpriceService = new NetPriceCalculator();
 		netpriceService.setFullPrice(fullPriceService);
-		registration = context.registerService(
+		context.registerService(
 				INetPriceCalculator.class.getName(), netpriceService, null);
 		System.out.println("INetPriceCalculator service is registered!");
 
 		distanceService = new DistanceCalculator();
 		distanceService.setDelivery(deliveryService);
-		registration = context.registerService(
+		context.registerService(
 				IDistanceCalculator.class.getName(), distanceService, null);
 		System.out.println("IDistanceCalculator service is registered!");
 
 		discountService = new DiscountCalculator();
 		discountService.setNetPrice(netpriceService);
-		registration = context.registerService(
+		context.registerService(
 				IDiscountCalculator.class.getName(), discountService, null);
 		System.out.println("IDiscountCalculator service is registered!");
 
 		orderpriceService = new OrderPriceCalculator();
 		orderpriceService.setDiscount(discountService);
 		orderpriceService.setDistance(distanceService);
-		registration = context.registerService(
+		context.registerService(
 				IOrderPriceCalculator.class.getName(), orderpriceService, null);
 		System.out.println("IOrderPriceCalculator service is registered!");
 
