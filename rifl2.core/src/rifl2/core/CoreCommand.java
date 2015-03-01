@@ -35,10 +35,11 @@ public class CoreCommand {
 	/**
 	 * The only command for the user. The user can step our work flow.
 	 */
-	@Descriptor(value = "RIFL command")
+	@Descriptor(value = "RIFL command. You can step the workflow with this command.")
 	public void step() {
 		try {
 			switch (step) {
+			// Initial step
 			case 0:
 				orderpriceService.init();
 				discountService.init();
@@ -59,27 +60,32 @@ public class CoreCommand {
 				orderpriceService.enQueue(order);
 				System.out.println("Initialized");
 				break;
+			// Calculate the base price
 			case 1:
 				orderpriceService.setRunning(true);
 				
 				break;
+			// Calculate the discount price
 			case 2:
 				discountService.setRunning(true);
 				
 				break;
+			// Calculate the delivery distance
 			case 3:
 				distanceService.setRunning(true);
 				
 				break;
-
+			// Calculate the net price
 			case 4:
 				netpriceService.setRunning(true);
 				
 				break;
+			// Calculate the delivery price
 			case 5:
 				deliveryService.setRunning(true);
 				
 				break;
+			// Calculate the full price
 			case 6:
 				fullPriceService.setRunning(true);
 				break;
@@ -96,6 +102,9 @@ public class CoreCommand {
 		
 	}
 
+	
+	/*************** Getters and setters for private fields. ***************/
+	
 	public IOrderPriceCalculator getOrderpriceService() {
 		return orderpriceService;
 	}
