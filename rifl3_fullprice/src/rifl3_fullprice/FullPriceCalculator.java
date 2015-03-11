@@ -32,8 +32,6 @@ public class FullPriceCalculator implements Runnable {
 
 			channel.queueDeclare(IN_QUEUE_PRICE_NAME, false, false, false, null);
 			channel.queueDeclare(IN_QUEUE_DELIV_NAME, false, false, false, null);
-			System.out
-					.println(" [*] Waiting for messages. To exit press CTRL+C");
 
 			priceConsumer = new QueueingConsumer(channel);
 			channel.basicConsume(IN_QUEUE_PRICE_NAME, true, priceConsumer);

@@ -33,8 +33,6 @@ public class NetPriceCalculator implements Runnable {
 			channel = connection.createChannel();
 
 			channel.queueDeclare(IN_QUEUE_NAME, false, false, false, null);
-			System.out
-					.println(" [*] Waiting for messages. To exit press CTRL+C");
 
 			consumer = new QueueingConsumer(channel);
 			channel.basicConsume(IN_QUEUE_NAME, true, consumer);

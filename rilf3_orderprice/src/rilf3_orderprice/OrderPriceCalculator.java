@@ -35,7 +35,6 @@ public class OrderPriceCalculator implements Runnable {
 			channel.queueDeclare(IN_QUEUE_NAME, false, false, false, null);
 			consumer = new QueueingConsumer(channel);
 			channel.basicConsume(IN_QUEUE_NAME, true, consumer);
-			System.out.println("Message queues created");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -68,16 +67,15 @@ public class OrderPriceCalculator implements Runnable {
 			if (isrunning) {
 				Order order;
 				try {
-					System.out.println("run started");
 					QueueingConsumer.Delivery delivery = consumer
 							.nextDelivery();
 					order = deserializeOrder(delivery.getBody());
-					System.out.println("BEFORE CALC"+order.toString());
+					System.out.println("BEFORE CALC "+order.toString());
 					calculateOrderPrice(order);
 					byte[] serializeOrder = serializeOrder(order);
 					channel.basicPublish(OUT_EXCHANGE_NAME, "", null,
 							serializeOrder);
-					System.out.println("AFTER CALC"+order.toString());
+					System.out.println("AFTER CALC "+order.toString());
 					isrunning = false;
 				} catch (InterruptedException e) {
 					e.printStackTrace();
