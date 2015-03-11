@@ -2,21 +2,15 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
-	<classpathentry kind="lib" path="C:/Users/Lunk Péter/Desktop/rabbitmq-java-client-bin-3.4.4/commons-cli-1.1.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Lunk Péter/Desktop/rabbitmq-java-client-bin-3.4.4/commons-io-1.2.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Lunk Péter/Desktop/rabbitmq-java-client-bin-3.4.4/junit.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Lunk Péter/Desktop/rabbitmq-java-client-bin-3.4.4/rabbitmq-client.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="jar:file:/D:/Downloads/rabbitmq-java-client-javadoc-3.4.4.zip!/"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/Lunk Péter/Desktop/rabbitmq-java-client-bin-3.4.4/rabbitmq-client-tests.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Lunk Péter/Desktop/rifl_datamodel.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/rifl3_delivery"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/rifl3_distance"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/rifl3_fullprice"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/rifl3_netprice"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/rilf3_discount"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/rilf3_orderprice"/>
+	<classpathentry kind="lib" path="rabbit/commons-cli-1.1.jar"/>
+	<classpathentry kind="lib" path="rabbit/commons-io-1.2.jar"/>
+	<classpathentry kind="lib" path="rabbit/rabbitmq-client.jar"/>
+	<classpathentry kind="lib" path="rabbit/rifl_datamodel.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

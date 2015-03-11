@@ -2,11 +2,9 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
-	<classpathentry kind="lib" path="C:/Users/Lunk Péter/Desktop/rabbitmq-java-client-bin-3.4.4/commons-cli-1.1.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Lunk Péter/Desktop/rabbitmq-java-client-bin-3.4.4/commons-io-1.2.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Lunk Péter/Desktop/rabbitmq-java-client-bin-3.4.4/junit.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Lunk Péter/Desktop/rabbitmq-java-client-bin-3.4.4/rabbitmq-client.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Lunk Péter/Desktop/rabbitmq-java-client-bin-3.4.4/rabbitmq-client-tests.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Lunk Péter/Desktop/rifl_datamodel.jar"/>
+	<classpathentry kind="lib" path="rabbit/commons-cli-1.1.jar"/>
+	<classpathentry kind="lib" path="rabbit/commons-io-1.2.jar"/>
+	<classpathentry kind="lib" path="rabbit/rabbitmq-client.jar"/>
+	<classpathentry kind="lib" path="rabbit/rifl_datamodel.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
