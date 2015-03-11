@@ -24,10 +24,10 @@ public class NetPriceCalculator implements Runnable{
 	
 private static double netModifier = 1.27;
 	
-	public NetPriceCalculator() {
+	public NetPriceCalculator(String brokerIP){
 		try {
 			ConnectionFactory factory = new ConnectionFactory();
-		    factory.setHost("localhost");
+		    factory.setHost(brokerIP);
 			connection = factory.newConnection();
 			channel = connection.createChannel();
 

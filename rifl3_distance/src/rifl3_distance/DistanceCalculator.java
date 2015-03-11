@@ -30,10 +30,10 @@ public class DistanceCalculator implements Runnable{
 	
 
 	
-	public DistanceCalculator() {
+	public DistanceCalculator(String brokerIP){
 		try {
 			ConnectionFactory factory = new ConnectionFactory();
-			factory.setHost("localhost");
+		    factory.setHost(brokerIP);
 			connection = factory.newConnection();
 			channel = connection.createChannel();
 

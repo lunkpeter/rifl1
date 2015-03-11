@@ -24,10 +24,10 @@ public class DiscountCalculator implements Runnable {
 	private Channel channel;
 	private QueueingConsumer consumer;
 
-	public DiscountCalculator() {
+	public DiscountCalculator(String brokerIP){
 		try {
 			ConnectionFactory factory = new ConnectionFactory();
-			factory.setHost("localhost");
+		    factory.setHost(brokerIP);
 			connection = factory.newConnection();
 			channel = connection.createChannel();
 

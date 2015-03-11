@@ -25,10 +25,10 @@ public class DeliveryCalculator implements Runnable{
 
 	private static double priceThreshold = 50000;
 	
-	public DeliveryCalculator(){
+	public DeliveryCalculator(String brokerIP){
 		try {
 			ConnectionFactory factory = new ConnectionFactory();
-		    factory.setHost("localhost");
+		    factory.setHost(brokerIP);
 			connection = factory.newConnection();
 			channel = connection.createChannel();
 

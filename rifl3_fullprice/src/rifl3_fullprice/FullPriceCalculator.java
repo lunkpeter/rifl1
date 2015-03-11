@@ -23,10 +23,10 @@ public class FullPriceCalculator implements Runnable{
 	private static final String IN_QUEUE_DELIV_NAME = "delivery";
 
 	
-	public FullPriceCalculator() {
+	public FullPriceCalculator(String brokerIP){
 		try {
 			ConnectionFactory factory = new ConnectionFactory();
-		    factory.setHost("localhost");
+		    factory.setHost(brokerIP);
 			connection = factory.newConnection();
 			channel = connection.createChannel();
 

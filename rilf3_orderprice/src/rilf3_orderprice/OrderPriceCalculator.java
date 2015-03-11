@@ -22,13 +22,10 @@ public class OrderPriceCalculator implements Runnable {
 	private Channel channel;
 	private QueueingConsumer consumer;
 
-	public OrderPriceCalculator() {
-
+	public OrderPriceCalculator(String brokerIP){
 		try {
-			//initialize factory connection and channel
 			ConnectionFactory factory = new ConnectionFactory();
-			
-			factory.setHost("localhost");
+		    factory.setHost(brokerIP);
 			connection = factory.newConnection();
 			channel = connection.createChannel();
 			//init output exchange
