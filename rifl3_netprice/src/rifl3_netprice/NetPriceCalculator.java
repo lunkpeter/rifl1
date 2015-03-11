@@ -87,5 +87,14 @@ private static double netModifier = 1.27;
 		ret = (Order) o.readObject();
 		return ret;
 	}
+	
+	private void closeConnection(){
+		try {
+			channel.close();
+			connection.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
 }

@@ -114,4 +114,13 @@ public class DistanceCalculator implements Runnable{
 		ret = (Order) o.readObject();
 		return ret;
 	}
+	
+	private void closeConnection(){
+		try {
+			channel.close();
+			connection.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 }
