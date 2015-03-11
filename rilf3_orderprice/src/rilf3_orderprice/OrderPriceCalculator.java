@@ -72,15 +72,13 @@ public class OrderPriceCalculator implements Runnable {
 					QueueingConsumer.Delivery delivery = consumer
 							.nextDelivery();
 					order = deserializeOrder(delivery.getBody());
-					System.out.println("calculating order price");
+					System.out.println("BEFORE CALC"+order.toString());
 					calculateOrderPrice(order);
-					// for (Node node : NextNodes) {
-					// node.Queue.put(order);
-					// }
 					byte[] serializeOrder = serializeOrder(order);
 					channel.basicPublish(OUT_EXCHANGE_NAME, "", null,
 							serializeOrder);
-					System.out.println("published");
+					System.out.println("AFTER CALC"+order.toString());
+					isrunning = false;
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				} catch (IOException e) {

@@ -69,10 +69,11 @@ public class FullPriceCalculator implements Runnable {
 							.nextDelivery();
 					delivorder = deserializeOrder(delivery.getBody());
 
-					System.out.println("calculating full price");
+					System.out.println("BEFORE CALC"+priceorder.toString());
 					calculateFullPrice(delivorder.getDeliveryData(),
 							priceorder.getPriceData());
-					System.out.println(priceorder.toString());
+					System.out.println("AFTER CALC"+priceorder.toString());
+					isrunning = false;
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				} catch (ClassNotFoundException e) {

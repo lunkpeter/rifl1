@@ -84,10 +84,12 @@ public class DistanceCalculator implements Runnable{
 			try {
 				QueueingConsumer.Delivery delivery = consumer.nextDelivery();
 				order = deserializeOrder(delivery.getBody());
-				System.out.println("calculating distance");
+				System.out.println("BEFORE CALC"+order.toString());
 				calculateDistance(order.getDeliveryData(), order.getCustomerData());
+				System.out.println("AFTER CALC"+order.toString());
 				channel.basicPublish("", OUT_QUEUE_NAME, null,
 						serializeOrder(order));
+				isrunning = false;
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
