@@ -16,21 +16,22 @@ import datamodel.Order;
 
 public class OrderPriceCalculator implements Runnable {
 	public boolean exit;
+	public boolean isrunning = false;
 	private static final String OUT_EXCHANGE_NAME = "order";
 	private static final String IN_QUEUE_NAME = "init";
 	private Connection connection;
 	private Channel channel;
 	private QueueingConsumer consumer;
 
-	public OrderPriceCalculator(String brokerIP){
+	public OrderPriceCalculator(String brokerIP) {
 		try {
 			ConnectionFactory factory = new ConnectionFactory();
-		    factory.setHost(brokerIP);
+			factory.setHost(brokerIP);
 			connection = factory.newConnection();
 			channel = connection.createChannel();
-			//init output exchange
+			// init output exchange
 			channel.exchangeDeclare(OUT_EXCHANGE_NAME, "fanout");
-			//init input queue
+			// init input queue
 			channel.queueDeclare(IN_QUEUE_NAME, false, false, false, null);
 			consumer = new QueueingConsumer(channel);
 			channel.basicConsume(IN_QUEUE_NAME, true, consumer);
@@ -52,7 +53,7 @@ public class OrderPriceCalculator implements Runnable {
 		order.getPriceData().setPrice(tempPrice);
 	}
 
-	private void closeConnection(){
+	private void closeConnection() {
 		try {
 			channel.close();
 			connection.close();
@@ -64,28 +65,37 @@ public class OrderPriceCalculator implements Runnable {
 	@Override
 	public void run() {
 		while (!exit) {
-			Order order;
-			try {
-				System.out.println("run started");
-				QueueingConsumer.Delivery delivery = consumer.nextDelivery();
-				order = deserializeOrder(delivery.getBody());
-				System.out.println("calculating order price");
-				calculateOrderPrice(order);
-				// for (Node node : NextNodes) {
-				// node.Queue.put(order);
-				// }
-				byte[] serializeOrder = serializeOrder(order);
-				channel.basicPublish(OUT_EXCHANGE_NAME,"", null,
-						serializeOrder);
-				System.out.println("published");
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (ClassNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			if (isrunning) {
+				Order order;
+				try {
+					System.out.println("run started");
+					QueueingConsumer.Delivery delivery = consumer
+							.nextDelivery();
+					order = deserializeOrder(delivery.getBody());
+					System.out.println("calculating order price");
+					calculateOrderPrice(order);
+					// for (Node node : NextNodes) {
+					// node.Queue.put(order);
+					// }
+					byte[] serializeOrder = serializeOrder(order);
+					channel.basicPublish(OUT_EXCHANGE_NAME, "", null,
+							serializeOrder);
+					System.out.println("published");
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (ClassNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			} else {
+				try {
+					Thread.sleep(50);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 			}
 
 		}
