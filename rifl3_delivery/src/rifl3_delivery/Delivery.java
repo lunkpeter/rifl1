@@ -6,7 +6,7 @@ import java.io.IOException;
 public class Delivery {
 
 	public static void main(String[] args) {
-		DeliveryCalculator calc = new DeliveryCalculator();
+		DeliveryCalculator calc = new DeliveryCalculator("localhost");
 		Thread mythread = new Thread(calc);
 		mythread.start();
 		

@@ -4,7 +4,7 @@ import java.io.IOException;
 
 public class OrderPrice {
 	public static void main(String[] args) {
-		OrderPriceCalculator calc = new OrderPriceCalculator();
+		OrderPriceCalculator calc = new OrderPriceCalculator("localhost");
 		Thread mythread = new Thread(calc);
 		mythread.start();
 		

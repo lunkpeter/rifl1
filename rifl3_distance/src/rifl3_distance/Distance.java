@@ -5,7 +5,7 @@ import java.io.IOException;
 public class Distance {
 	
 	public static void main(String[] args) {
-		DistanceCalculator calc = new DistanceCalculator();
+		DistanceCalculator calc = new DistanceCalculator("localhost");
 		Thread mythread = new Thread(calc);
 		mythread.start();
 		

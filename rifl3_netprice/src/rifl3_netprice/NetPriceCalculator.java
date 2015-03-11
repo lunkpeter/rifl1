@@ -69,7 +69,7 @@ private static double netModifier = 1.27;
 			}
 			
 		}
-		
+		closeConnection();
 	}
 	
 	private byte[] serializeOrder(Order order) throws IOException {

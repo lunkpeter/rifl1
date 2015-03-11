@@ -83,6 +83,7 @@ public class DiscountCalculator implements Runnable {
 			}
 
 		}
+		closeConnection();
 
 	}
 	

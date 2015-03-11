@@ -4,7 +4,7 @@ import java.io.IOException;
 
 public class Discount {
 	public static void main(String[] args) {
-		DiscountCalculator calc = new DiscountCalculator();
+		DiscountCalculator calc = new DiscountCalculator("locahost");
 		Thread mythread = new Thread(calc);
 		mythread.start();
 		

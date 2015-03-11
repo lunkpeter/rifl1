@@ -4,7 +4,7 @@ import java.io.IOException;
 
 public class Netprice {
 	public static void main(String[] args) {
-		NetPriceCalculator calc = new NetPriceCalculator();
+		NetPriceCalculator calc = new NetPriceCalculator("localhost");
 		Thread mythread = new Thread(calc);
 		mythread.start();
 		

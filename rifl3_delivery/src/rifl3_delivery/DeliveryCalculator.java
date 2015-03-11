@@ -95,6 +95,7 @@ public class DeliveryCalculator implements Runnable{
 			}
 			
 		}
+		closeConnection();
 	}
 	
 	private byte[] serializeOrder(Order order) throws IOException {

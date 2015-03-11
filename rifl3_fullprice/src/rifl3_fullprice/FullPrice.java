@@ -4,7 +4,7 @@ import java.io.IOException;
 
 public class FullPrice {
 	public static void main(String[] args) {
-		FullPriceCalculator calc = new FullPriceCalculator();
+		FullPriceCalculator calc = new FullPriceCalculator("localhost");
 		Thread mythread = new Thread(calc);
 		mythread.start();
 		

@@ -96,6 +96,7 @@ public class DistanceCalculator implements Runnable{
 			
 
 		}
+		closeConnection();
 		
 	}
 	

@@ -79,6 +79,7 @@ public class FullPriceCalculator implements Runnable{
 				e.printStackTrace();
 			}
 		}
+		closeConnection();
 		
 	}
 	
