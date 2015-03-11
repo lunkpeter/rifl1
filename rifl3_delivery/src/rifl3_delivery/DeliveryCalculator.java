@@ -34,7 +34,6 @@ public class DeliveryCalculator implements Runnable{
 			channel = connection.createChannel();
 
 		    channel.queueDeclare(IN_QUEUE_NAME, false, false, false, null);
-		    System.out.println(" [*] DELIVERY Waiting for messages. To exit press CTRL+C");
 		    
 		    consumer = new QueueingConsumer(channel);
 		    channel.basicConsume(IN_QUEUE_NAME, true, consumer);
@@ -82,10 +81,12 @@ public class DeliveryCalculator implements Runnable{
 				try {
 					QueueingConsumer.Delivery delivery = consumer.nextDelivery();
 					order = deserializeOrder(delivery.getBody());
-					System.out.println("calculating delivery");
+					System.out.println("BEFORE CALC"+order.toString());
 					calculateDelivery(order.getDeliveryData(), order.getPriceData());
+					System.out.println("AFTER CALC"+order.toString());
 					channel.basicPublish("", OUT_QUEUE_NAME, null,
 							serializeOrder(order));
+					isrunning = false;
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				} catch (ClassNotFoundException e) {

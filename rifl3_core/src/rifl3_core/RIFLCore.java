@@ -39,12 +39,14 @@ public class RIFLCore {
 			connection = factory.newConnection();
 			channel = connection.createChannel();
 			channel.queueDeclare(OUT_QUEUE_NAME, false, false, false, null);
+			System.out.println("AMQP connection established at: "+brokerIP);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
 		
-		
+		System.out.println("Type \"send\" to send an order request");
+		System.out.println("Type \"quit\" to exit");
 		while(!exit){
 			BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 			try {
@@ -89,7 +91,6 @@ public class RIFLCore {
 			channel.close();
 			connection.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		

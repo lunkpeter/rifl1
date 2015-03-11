@@ -68,10 +68,12 @@ public class DiscountCalculator implements Runnable {
 					QueueingConsumer.Delivery delivery = consumer
 							.nextDelivery();
 					order = deserializeOrder(delivery.getBody());
-					System.out.println("calculating discount");
+					System.out.println("BEFORE CALC"+order.toString());
 					caclulateDiscount(order.getPriceData());
 					channel.basicPublish("", OUT_QUEUE_NAME, null,
 							serializeOrder(order));
+					System.out.println("AFTER CALC"+order.toString());
+					isrunning = false;
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				} catch (ClassNotFoundException e) {
