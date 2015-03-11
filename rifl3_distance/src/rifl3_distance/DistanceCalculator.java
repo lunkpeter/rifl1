@@ -24,6 +24,7 @@ public class DistanceCalculator implements Runnable{
 	private static final String IN_EXCHANGE_NAME = "order";
 	private static final String OUT_QUEUE_NAME = "distance";
 	public boolean exit;
+	public boolean isrunning = false;
 	private Connection connection;
 	private Channel channel;
 	private QueueingConsumer consumer;
@@ -78,6 +79,7 @@ public class DistanceCalculator implements Runnable{
 	@Override
 	public void run() {
 		while (!exit) {
+			if(isrunning){
 			Order order;
 			try {
 				QueueingConsumer.Delivery delivery = consumer.nextDelivery();
@@ -93,6 +95,14 @@ public class DistanceCalculator implements Runnable{
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
 			}
+			}else {
+				try {
+					Thread.sleep(50);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+			
 			
 
 		}

@@ -17,6 +17,7 @@ import datamodel.PriceData;
 
 public class DeliveryCalculator implements Runnable{
 	public boolean exit;
+	public boolean isrunning = false;
 	private static final String IN_QUEUE_NAME = "distance";
 	private static final String OUT_QUEUE_NAME = "delivery";
 	private Connection connection;
@@ -76,23 +77,32 @@ public class DeliveryCalculator implements Runnable{
 	@Override
 	public void run() {
 		while (!exit) {
-			Order order;
-			try {
-				QueueingConsumer.Delivery delivery = consumer.nextDelivery();
-				order = deserializeOrder(delivery.getBody());
-				System.out.println("calculating delivery");
-				calculateDelivery(order.getDeliveryData(), order.getPriceData());
-				channel.basicPublish("", OUT_QUEUE_NAME, null,
-						serializeOrder(order));
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			} catch (ClassNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			if(isrunning){
+				Order order;
+				try {
+					QueueingConsumer.Delivery delivery = consumer.nextDelivery();
+					order = deserializeOrder(delivery.getBody());
+					System.out.println("calculating delivery");
+					calculateDelivery(order.getDeliveryData(), order.getPriceData());
+					channel.basicPublish("", OUT_QUEUE_NAME, null,
+							serializeOrder(order));
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				} catch (ClassNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}else {
+				try {
+					Thread.sleep(50);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 			}
+			
 			
 		}
 		closeConnection();

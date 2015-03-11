@@ -16,6 +16,7 @@ import datamodel.PriceData;
 
 public class DiscountCalculator implements Runnable {
 	public boolean exit;
+	public boolean isrunning = false;
 	private static final String IN_EXCHANGE_NAME = "order";
 	private static final String OUT_QUEUE_NAME = "discount";
 	private static double priceThreshold1 = 100000;
@@ -24,10 +25,10 @@ public class DiscountCalculator implements Runnable {
 	private Channel channel;
 	private QueueingConsumer consumer;
 
-	public DiscountCalculator(String brokerIP){
+	public DiscountCalculator(String brokerIP) {
 		try {
 			ConnectionFactory factory = new ConnectionFactory();
-		    factory.setHost(brokerIP);
+			factory.setHost(brokerIP);
 			connection = factory.newConnection();
 			channel = connection.createChannel();
 
@@ -37,14 +38,11 @@ public class DiscountCalculator implements Runnable {
 
 			consumer = new QueueingConsumer(channel);
 			channel.basicConsume(queueName, true, consumer);
-			
+
 			channel.queueDeclare(OUT_QUEUE_NAME, false, false, false, null);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-
-
 
 	}
 
@@ -64,29 +62,38 @@ public class DiscountCalculator implements Runnable {
 	@Override
 	public void run() {
 		while (!exit) {
-			Order order;
-			try {
-				QueueingConsumer.Delivery delivery = consumer.nextDelivery();
-				order = deserializeOrder(delivery.getBody());
-				System.out.println("calculating discount");
-				caclulateDiscount(order.getPriceData());
-				channel.basicPublish("", OUT_QUEUE_NAME, null,
-						serializeOrder(order));
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			} catch (ClassNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			if (isrunning) {
+				Order order;
+				try {
+					QueueingConsumer.Delivery delivery = consumer
+							.nextDelivery();
+					order = deserializeOrder(delivery.getBody());
+					System.out.println("calculating discount");
+					caclulateDiscount(order.getPriceData());
+					channel.basicPublish("", OUT_QUEUE_NAME, null,
+							serializeOrder(order));
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				} catch (ClassNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			} else {
+				try {
+					Thread.sleep(50);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 			}
 
 		}
 		closeConnection();
 
 	}
-	
+
 	private byte[] serializeOrder(Order order) throws IOException {
 		ByteArrayOutputStream b = new ByteArrayOutputStream();
 		ObjectOutputStream o = new ObjectOutputStream(b);
@@ -102,8 +109,8 @@ public class DiscountCalculator implements Runnable {
 		ret = (Order) o.readObject();
 		return ret;
 	}
-	
-	private void closeConnection(){
+
+	private void closeConnection() {
 		try {
 			channel.close();
 			connection.close();
