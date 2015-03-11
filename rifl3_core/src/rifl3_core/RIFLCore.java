@@ -70,7 +70,7 @@ public class RIFLCore {
 						
 						channel.basicPublish("", OUT_QUEUE_NAME, null,
 								serializeOrder(order));
-						System.out.println("published");
+						System.out.println("Order sent");
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
