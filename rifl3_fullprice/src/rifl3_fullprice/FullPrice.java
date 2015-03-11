@@ -4,7 +4,12 @@ import java.io.IOException;
 
 public class FullPrice {
 	public static void main(String[] args) {
-		FullPriceCalculator calc = new FullPriceCalculator("localhost");
+		String brokerIP="localhost";
+		if(args.length>0) {
+			brokerIP=args[1];
+		}
+		
+		FullPriceCalculator calc = new FullPriceCalculator(brokerIP);
 		Thread mythread = new Thread(calc);
 		mythread.start();
 		

@@ -4,7 +4,12 @@ import java.io.IOException;
 
 public class OrderPrice {
 	public static void main(String[] args) {
-		OrderPriceCalculator calc = new OrderPriceCalculator("localhost");
+		String brokerIP="localhost";
+		if(args.length>0) {
+			brokerIP=args[1];
+		}
+		
+		OrderPriceCalculator calc = new OrderPriceCalculator(brokerIP);
 		Thread mythread = new Thread(calc);
 		mythread.start();
 		

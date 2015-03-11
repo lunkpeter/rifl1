@@ -4,7 +4,12 @@ import java.io.IOException;
 
 public class Netprice {
 	public static void main(String[] args) {
-		NetPriceCalculator calc = new NetPriceCalculator("localhost");
+		String brokerIP="localhost";
+		if(args.length>0) {
+			brokerIP=args[1];
+		}
+		
+		NetPriceCalculator calc = new NetPriceCalculator(brokerIP);
 		Thread mythread = new Thread(calc);
 		mythread.start();
 		

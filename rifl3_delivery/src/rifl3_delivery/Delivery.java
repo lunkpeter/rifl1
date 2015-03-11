@@ -6,7 +6,12 @@ import java.io.IOException;
 public class Delivery {
 
 	public static void main(String[] args) {
-		DeliveryCalculator calc = new DeliveryCalculator("localhost");
+		String brokerIP="localhost";
+		if(args.length>0) {
+			brokerIP=args[1];
+		}
+		
+		DeliveryCalculator calc = new DeliveryCalculator(brokerIP);
 		Thread mythread = new Thread(calc);
 		mythread.start();
 		

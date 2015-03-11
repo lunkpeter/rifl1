@@ -23,6 +23,10 @@ public class RIFLCore {
 	
 	
 	public static void main(String[] args) {
+		String brokerIP="localhost";
+		if(args.length>0) {
+			brokerIP=args[1];
+		}
 		
 		final String OUT_QUEUE_NAME = "init";
 		Connection connection = null;
@@ -30,7 +34,7 @@ public class RIFLCore {
 		boolean exit = false;
 		
 		ConnectionFactory factory = new ConnectionFactory();
-		factory.setHost("localhost");
+		factory.setHost(brokerIP);
 		try {
 			connection = factory.newConnection();
 			channel = connection.createChannel();

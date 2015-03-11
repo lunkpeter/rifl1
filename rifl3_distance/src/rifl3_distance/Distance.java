@@ -5,7 +5,12 @@ import java.io.IOException;
 public class Distance {
 	
 	public static void main(String[] args) {
-		DistanceCalculator calc = new DistanceCalculator("localhost");
+		String brokerIP="localhost";
+		if(args.length>0) {
+			brokerIP=args[1];
+		}
+		
+		DistanceCalculator calc = new DistanceCalculator(brokerIP);
 		Thread mythread = new Thread(calc);
 		mythread.start();
 		

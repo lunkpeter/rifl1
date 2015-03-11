@@ -4,7 +4,12 @@ import java.io.IOException;
 
 public class Discount {
 	public static void main(String[] args) {
-		DiscountCalculator calc = new DiscountCalculator("locahost");
+		String brokerIP="localhost";
+		if(args.length>0) {
+			brokerIP=args[1];
+		}
+		
+		DiscountCalculator calc = new DiscountCalculator(brokerIP);
 		Thread mythread = new Thread(calc);
 		mythread.start();
 		
