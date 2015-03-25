@@ -13,13 +13,19 @@ public class DistanceCalculator extends BaseCalculator{
 	private static double eastDeliveryCost = 3500;
 	private static double westDeliveryCost = 4500;
 	private static double centralDeliveryCost = 500;
-	private static final String IN_QUEUE_NAME = "order_delivery";
-	private static final String OUT_QUEUE_NAME = "distance";
 	
-
+	private static final String IN_TOPIC_NAME = "topic/order";
+	private static final String OUT_TOPIC_NAME = "topic/distance";
 	
-	public DistanceCalculator(String brokerUrl) throws JMSException{
-		setConnection(brokerUrl, IN_QUEUE_NAME, OUT_QUEUE_NAME);
+	private static final String IN_QUEUE_NAME = "queue/order_delivery";
+	private static final String OUT_QUEUE_NAME = "queue/distance";
+	
+	
+	public DistanceCalculator() throws JMSException{
+		if(mode==MessagingMode.Topic)
+			setConnection(IN_TOPIC_NAME, OUT_TOPIC_NAME);
+		else
+			setConnection(IN_QUEUE_NAME, OUT_QUEUE_NAME);
 	}
 	
 	protected void calculate(Order order) throws InterruptedException {

@@ -5,22 +5,19 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 import javax.jms.JMSException;
+import javax.naming.NamingException;
 
 public class FullPrice {
 	public static void main(String[] args) {
 		boolean exit = false;
-		String brokerUrl="tcp://localhost:61616";
-		if(args.length>0) {
-			brokerUrl=args[1];
-		}
 		
 		FullPriceCalculator calc = null;
 		try {
-			calc = new FullPriceCalculator(brokerUrl);
+			calc = new FullPriceCalculator();
 			Thread mythread = new Thread(calc);
 			mythread.start();
 			
-			System.out.println("Connection established at: "+brokerUrl);
+			System.out.println("Connection established!");
 			System.out.println("Type \"step\" to step the workflow");
 			System.out.println("Type \"quit\" to exit");
 			while(!exit)
@@ -28,16 +25,10 @@ public class FullPrice {
 				BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 				try {
 					String input = reader.readLine();
-					switch (input) {
-					case "step":
+					if(input.equals("step")){
 						calc.isrunning = true;
-						break;
-					case "quit":
+					}else if (input.equals("quit")) {
 						exit = true;
-						break;
-	
-					default:
-						break;
 					}
 				} catch (IOException e) {
 					e.printStackTrace();
@@ -45,8 +36,12 @@ public class FullPrice {
 			}
 		}catch (JMSException ex) {
 			
+		} catch (NamingException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 		} finally {
-			calc.exit = true;
+			if(calc!=null)
+				calc.exit = true;
 		}
 	}
 }

@@ -11,18 +11,14 @@ public class Delivery {
 
 	public static void main(String[] args) {
 		boolean exit = false;
-		String brokerUrl="tcp://localhost:61616";
-		if(args.length>0) {
-			brokerUrl=args[1];
-		}
 		
 		DeliveryCalculator calc = null;
 		try {
-			calc = new DeliveryCalculator(brokerUrl);
+			calc = new DeliveryCalculator();
 			Thread mythread = new Thread(calc);
 			mythread.start();
 			
-			System.out.println("Connection established at: "+brokerUrl);
+			System.out.println("Connection established!");
 			System.out.println("Type \"step\" to step the workflow");
 			System.out.println("Type \"quit\" to exit");
 			while(!exit)
@@ -30,17 +26,12 @@ public class Delivery {
 				BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 				try {
 					String input = reader.readLine();
-					switch (input) {
-					case "step":
+					if(input.equals("step")){
 						calc.isrunning = true;
-						break;
-					case "quit":
+					}else if (input.equals("quit")) {
 						exit = true;
-						break;
-	
-					default:
-						break;
 					}
+					
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -48,7 +39,8 @@ public class Delivery {
 		}catch (JMSException ex) {
 			
 		} finally {
-			calc.exit = true;
+			if(calc!=null)
+				calc.exit = true;
 		}
 	}
 	
