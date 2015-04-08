@@ -2,10 +2,11 @@ package rifl5_calculators;
 
 import java.io.IOException;
 
-import akka.actor.ActorRef;
 import rifl5_base.BaseCalculator;
+import rifl5_base.OrderGUI;
 import rifl5_base.OrderMessage;
 import rifl5_base.OrderMessage.Sender;
+import akka.actor.ActorRef;
 import datamodel.Order;
 import datamodel.PriceData;
 
@@ -16,6 +17,7 @@ public class NetPriceCalculator extends BaseCalculator {
 	
 	public NetPriceCalculator(ActorRef ref){
 		fullPriceRef = ref;
+		gui = new OrderGUI("Net Price Calculator");
 	}
 
 	protected void calculate(Order order) throws InterruptedException {

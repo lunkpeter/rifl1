@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import akka.actor.ActorRef;
 import rifl5_base.BaseCalculator;
+import rifl5_base.OrderGUI;
 import rifl5_base.OrderMessage;
 import rifl5_base.OrderMessage.Sender;
 import datamodel.DeliveryData;
@@ -19,7 +19,7 @@ public class FullPriceCalculator extends BaseCalculator {
 	private List<Order> priceOrders = new ArrayList<Order>();
 
 	public FullPriceCalculator(){
-		
+		gui = new OrderGUI("Full Price Calculator");
 	}
 
 	
@@ -70,8 +70,17 @@ public class FullPriceCalculator extends BaseCalculator {
 				
 				
 				System.out.println(this.getClass().getName()+" BEFORE CALC" + orderMessage);
+				gui.setOrder(priceOrder);
+				while(!gui.canCalculate)
+					Thread.sleep(100);
+				gui.canCalculate = false;
 				calculate(delivOrder, priceOrder);
 				System.out.println(this.getClass().getName()+" AFTER CALC" + orderMessage);
+
+				gui.setAfter(priceOrder);
+				while(!gui.canSend)
+					Thread.sleep(100);
+				gui.canSend = false;
 				send(orderMessage);
 			} catch (ClassNotFoundException e) {
 				unhandled(msg);

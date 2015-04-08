@@ -4,6 +4,7 @@ package rifl5_calculators;
 import java.io.IOException;
 
 import rifl5_base.BaseCalculator;
+import rifl5_base.OrderGUI;
 import rifl5_base.OrderMessage;
 import rifl5_base.OrderMessage.Sender;
 import akka.actor.ActorRef;
@@ -19,6 +20,7 @@ public class DeliveryCalculator extends BaseCalculator{
 	
 	public DeliveryCalculator(ActorRef ref){
 		fullPriceRef = ref;
+		gui = new OrderGUI("Delivery Calculator");
 	}
 	
 	protected void calculate(Order order) throws InterruptedException {

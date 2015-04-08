@@ -12,6 +12,7 @@ import datamodel.Order;
 public abstract class BaseCalculator extends UntypedActor {
 
 	protected abstract void calculate(Order order) throws InterruptedException;
+	protected OrderGUI gui;
 
 	@Override
 	public void onReceive(Object msg) {
@@ -19,9 +20,24 @@ public abstract class BaseCalculator extends UntypedActor {
 			OrderMessage orderMessage;
 			try {
 				orderMessage = deserializeOrder((byte[]) msg);
-				System.out.println(this.getClass().getName()+" BEFORE CALC" + orderMessage);
-				calculate(orderMessage.getOrder());
-				System.out.println(this.getClass().getName()+" AFTER CALC" + orderMessage);
+				Order order = orderMessage.getOrder();
+				if(gui==null) {
+					System.out.println(this.getClass().getName()+" BEFORE CALC" + orderMessage);
+				} else { 
+					gui.setOrder(order);
+					while(!gui.canCalculate)
+						Thread.sleep(100);
+					gui.canCalculate = false;
+				}
+				calculate(order);
+				if(gui==null) {
+					System.out.println(this.getClass().getName()+" AFTER CALC" + orderMessage);
+				} else {
+					gui.setAfter(order);
+					while(!gui.canSend)
+						Thread.sleep(100);
+					gui.canSend = false;
+				}
 				send(orderMessage);
 			} catch (ClassNotFoundException e) {
 				unhandled(msg);

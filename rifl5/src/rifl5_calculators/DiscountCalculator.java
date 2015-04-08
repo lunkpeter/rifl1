@@ -4,6 +4,7 @@ package rifl5_calculators;
 import java.io.IOException;
 
 import rifl5_base.BaseCalculator;
+import rifl5_base.OrderGUI;
 import rifl5_base.OrderMessage;
 import rifl5_base.OrderMessage.Sender;
 import akka.actor.ActorRef;
@@ -18,6 +19,7 @@ public class DiscountCalculator extends BaseCalculator {
 
 	public DiscountCalculator(ActorRef ref){
 		netPriceRef = ref;
+		gui = new OrderGUI("Discount Calculator");
 	}
 
 	protected void calculate(Order order) throws InterruptedException {

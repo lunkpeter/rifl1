@@ -28,6 +28,9 @@ public class OrderGUI {
 	
 	private List<Order> orders = new ArrayList<Order>();
 	private Order after;
+	
+	public boolean canCalculate;
+	public boolean canSend;
 
 	protected Shell shell;
 	private StyledText txtBefore;
@@ -99,10 +102,10 @@ public class OrderGUI {
 			public void mouseUp(MouseEvent e) {
 				btnCalculate.setEnabled(false);
 				if(LBL_CALCULATE.equals(btnCalculate.getText())) {
-					//actor.calc
+					canCalculate = true;
 					btnCalculate.setText(LBL_SEND);
 				} else if(LBL_SEND.equals(btnCalculate.getText())) {
-					//actor.send
+					canSend = true;
 					orders.remove(after);
 					btnCalculate.setText(LBL_CALCULATE);
 					if(orders.size()>0) {

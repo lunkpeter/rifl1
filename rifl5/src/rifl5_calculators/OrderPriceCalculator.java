@@ -3,6 +3,7 @@ package rifl5_calculators;
 import java.io.IOException;
 
 import rifl5_base.BaseCalculator;
+import rifl5_base.OrderGUI;
 import rifl5_base.OrderMessage;
 import rifl5_base.OrderMessage.Sender;
 import akka.actor.ActorRef;
@@ -18,6 +19,7 @@ public class OrderPriceCalculator extends BaseCalculator {
 	public OrderPriceCalculator(ActorRef dist, ActorRef disc){
 		distanceRef = dist;
 		discountRef = disc;
+		gui = new OrderGUI("Order Price Calculator");
 	}
 
 	@Override

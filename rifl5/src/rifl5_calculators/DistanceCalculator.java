@@ -4,6 +4,7 @@ package rifl5_calculators;
 import java.io.IOException;
 
 import rifl5_base.BaseCalculator;
+import rifl5_base.OrderGUI;
 import rifl5_base.OrderMessage;
 import rifl5_base.OrderMessage.Sender;
 import akka.actor.ActorRef;
@@ -23,6 +24,7 @@ public class DistanceCalculator extends BaseCalculator{
 	
 	public DistanceCalculator(ActorRef ref){
 		deliveryRef = ref;
+		gui = new OrderGUI("Distance Calculator");
 	}
 	
 	protected void calculate(Order order) throws InterruptedException {

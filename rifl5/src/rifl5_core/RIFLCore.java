@@ -40,7 +40,6 @@ public class RIFLCore {
 //			system.actorOf(Props.create(Terminator.class, distRef), "orderterminator");
 			
 			
-			
 			ActorRef fullRef = system.actorOf(Props.create(FullPriceCalculator.class), "fullprice");
 			ActorRef netRef = system.actorOf(Props.create(NetPriceCalculator.class, fullRef), "net");
 			ActorRef delivRef = system.actorOf(Props.create(DeliveryCalculator.class, fullRef), "deliv");
