@@ -44,10 +44,10 @@ public class FullPriceCalculator extends BaseCalculator {
 				orderMessage = deserializeOrder((byte[]) msg);
 				if(orderMessage.getSender().equals(Sender.Delivery)){
 					delivOrders.add(orderMessage.getOrder());
-					System.out.println(this.getClass().getName()+" Addied deliv" + orderMessage);
+					//System.out.println(this.getClass().getName()+" Addied deliv" + orderMessage);
 				}else if (orderMessage.getSender().equals(Sender.Net)) {
 					priceOrders.add(orderMessage.getOrder());
-					System.out.println(this.getClass().getName()+" added price" + orderMessage);
+					//System.out.println(this.getClass().getName()+" added price" + orderMessage);
 				}else {
 					unhandled(msg);
 				}
@@ -66,21 +66,21 @@ public class FullPriceCalculator extends BaseCalculator {
 				if(delivOrder == null || priceOrder == null){
 					return;
 				}
-				
-				
-				
-				System.out.println(this.getClass().getName()+" BEFORE CALC" + orderMessage);
 				gui.setOrder(priceOrder);
+				
 				while(!gui.canCalculate)
 					Thread.sleep(100);
 				gui.canCalculate = false;
 				calculate(delivOrder, priceOrder);
-				System.out.println(this.getClass().getName()+" AFTER CALC" + orderMessage);
-
+				
 				gui.setAfter(priceOrder);
 				while(!gui.canSend)
 					Thread.sleep(100);
 				gui.canSend = false;
+				
+				delivOrders.remove(delivOrder);
+				priceOrders.remove(priceOrder);
+				
 				send(orderMessage);
 			} catch (ClassNotFoundException e) {
 				unhandled(msg);
@@ -95,17 +95,12 @@ public class FullPriceCalculator extends BaseCalculator {
 		} else {
 			unhandled(msg);
 		}
-		
-
-		//getSender().tell(Msg.DONE, getSelf());
-	
 	}
 
 	@Override
 	protected void send(OrderMessage msg) {
 		msg.setSender(Sender.Full);
 		System.out.println(msg);
-		
 	}
 
 

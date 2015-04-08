@@ -1,14 +1,13 @@
 package rifl5_core;
 
-import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.ObjectOutputStream;
 import java.util.Random;
 
 import rifl5_base.OrderMessage;
 import rifl5_base.OrderMessage.Sender;
+import rifl5_base.SenderGUI;
 import rifl5_calculators.DeliveryCalculator;
 import rifl5_calculators.DiscountCalculator;
 import rifl5_calculators.DistanceCalculator;
@@ -28,6 +27,11 @@ import datamodel.Region;
 
 public class RIFLCore {
 	private static boolean exit = false;
+	
+	public static enum Command {none, generate, send, exit};
+	public static Command command = Command.none;
+	private static Order order;
+	private static SenderGUI gui;
 
 	public static void main(String[] args) {
 		try {
@@ -46,34 +50,36 @@ public class RIFLCore {
 			ActorRef discRef = system.actorOf(Props.create(DiscountCalculator.class, netRef), "discount");
 			ActorRef distRef = system.actorOf(Props.create(DistanceCalculator.class, delivRef), "distance");
 			ActorRef orderPriceRef = system.actorOf(Props.create(OrderPriceCalculator.class, distRef,discRef), "orderprice");
+			gui = new SenderGUI("Order Creator");
 			
-			System.out.println("Type \"send\" to send an order request");
-			System.out.println("Type \"quit\" to exit");
+//			System.out.println("Type \"send\" to send an order request");
+//			System.out.println("Type \"quit\" to exit");
 			while (!exit) {
-				BufferedReader reader = new BufferedReader(
-						new InputStreamReader(System.in));
-				try {
-					String input = reader.readLine();
-					if (input.equals("quit")) {
-						System.out.println("Bye-bye!");
-						exit = true;
-					} else if (input.equals("send")) {
-						Order order = generateRandomOrder();
-						OrderMessage message = new OrderMessage(order, Sender.Order);
-						
-						try {
-							orderPriceRef.tell(serializeOrder(message), ActorRef.noSender());
-							System.out.println("Order sent");
-
-						} catch (Exception e) {
-							System.err.println("Problem while sending order!");
-							System.err.println(e.getMessage());
-						}
-					}
-
-				} catch (IOException e) {
-					System.out.println("Invalid input");
+				//Wait for command
+				while(command==Command.none) {
+						Thread.sleep(100);
 				}
+				
+				if (command==Command.exit) {
+					System.out.println("Bye-bye!");
+					exit = true;
+				} else if (command==Command.generate) {
+					order = generateRandomOrder();
+					gui.setOrder(order);
+				} else if (command==Command.send && order!=null) {
+					OrderMessage message = new OrderMessage(order, Sender.Order);
+					
+					try {
+						orderPriceRef.tell(serializeOrder(message), ActorRef.noSender());
+						System.out.println("Order sent");
+
+					} catch (Exception e) {
+						System.err.println("Problem while sending order!");
+						System.err.println(e.getMessage());
+					}
+					order = null;
+				}
+				command = Command.none;
 
 			}
 		} catch (Exception ex) {
