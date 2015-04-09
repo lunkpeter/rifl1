@@ -19,7 +19,7 @@ public class FullPriceCalculator extends BaseCalculator {
 	private List<Order> priceOrders = new ArrayList<Order>();
 
 	public FullPriceCalculator(){
-		gui = new OrderGUI("Full Price Calculator");
+		gui = new OrderGUI("Full Price Calculator",5);
 	}
 
 	

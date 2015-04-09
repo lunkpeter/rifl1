@@ -15,9 +15,10 @@ import javax.swing.border.TitledBorder;
 import datamodel.Order;
 
 public class OrderGUI {
+	private static final int HEIGHT = 300;
+	private static final int WIDTH = 600;
 	private static final String LBL_CALCULATE="Calculate";
 	private static final String LBL_SEND="Send";
-	private static int windowOffset = 0;
 	
 	public boolean canCalculate;
 	public boolean canSend;
@@ -30,19 +31,18 @@ public class OrderGUI {
 	/**
 	 * Create the application.
 	 */
-	public OrderGUI(String title) {
-		initialize(title);
+	public OrderGUI(String title, int pos) {
+		initialize(title, pos);
 		frmDefault.setVisible(true);
 	}
 
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	private void initialize(String title) {
+	private void initialize(String title, int pos) {
 		frmDefault = new JFrame();
 		frmDefault.setTitle(title);
-		frmDefault.setBounds(10+windowOffset, 100, 600, 300);
-		windowOffset+=150;
+		frmDefault.setBounds((int)(pos/3.0)*WIDTH+SenderGUI.WIDTH, pos%3*HEIGHT, WIDTH, HEIGHT);
 		frmDefault.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmDefault.getContentPane().setLayout(new BorderLayout(0, 0));
 		

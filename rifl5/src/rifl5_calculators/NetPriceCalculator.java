@@ -17,7 +17,7 @@ public class NetPriceCalculator extends BaseCalculator {
 	
 	public NetPriceCalculator(ActorRef ref){
 		fullPriceRef = ref;
-		gui = new OrderGUI("Net Price Calculator");
+		gui = new OrderGUI("Net Price Calculator",2);
 	}
 
 	protected void calculate(Order order) throws InterruptedException {

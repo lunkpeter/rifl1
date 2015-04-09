@@ -22,8 +22,9 @@ import rifl5_core.RIFLCore.Command;
 import java.awt.Color;
 
 public class SenderGUI {
-	private static int windowOffset = 0;
 
+	public static final int HEIGHT = 450;
+	public static final int WIDTH = 350;
 	private JFrame frmDefault;
 	private JTextArea txtGenerated;
 	private JButton btnGenerate;
@@ -43,8 +44,7 @@ public class SenderGUI {
 	private void initialize(String title) {
 		frmDefault = new JFrame();
 		frmDefault.setTitle(title);
-		frmDefault.setBounds(10+windowOffset, 100+windowOffset/10, 350, 450);
-		windowOffset+=150;
+		frmDefault.setBounds(0, 0, WIDTH, HEIGHT);
 		frmDefault.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmDefault.getContentPane().setLayout(new BorderLayout(0, 0));
 		

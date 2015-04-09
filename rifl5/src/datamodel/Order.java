@@ -79,7 +79,7 @@ public class Order extends Element {
 	@Override
 	public String toString() {
 		// TODO Auto-generated method stub
-		StringBuilder sb = new StringBuilder("\n**************Order**************\n");
+		StringBuilder sb = new StringBuilder("**************Order**************\n");
 		sb.append("id: "+this.id+"\n");
 		sb.append(priceData+"\n");
 		sb.append(customerData+"\n");

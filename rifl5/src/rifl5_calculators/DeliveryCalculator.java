@@ -20,7 +20,7 @@ public class DeliveryCalculator extends BaseCalculator{
 	
 	public DeliveryCalculator(ActorRef ref){
 		fullPriceRef = ref;
-		gui = new OrderGUI("Delivery Calculator");
+		gui = new OrderGUI("Delivery Calculator",4);
 	}
 	
 	protected void calculate(Order order) throws InterruptedException {

@@ -19,7 +19,7 @@ public class OrderPriceCalculator extends BaseCalculator {
 	public OrderPriceCalculator(ActorRef dist, ActorRef disc){
 		distanceRef = dist;
 		discountRef = disc;
-		gui = new OrderGUI("Order Price Calculator");
+		gui = new OrderGUI("Order Price Calculator",0);
 	}
 
 	@Override

@@ -19,7 +19,7 @@ public class DiscountCalculator extends BaseCalculator {
 
 	public DiscountCalculator(ActorRef ref){
 		netPriceRef = ref;
-		gui = new OrderGUI("Discount Calculator");
+		gui = new OrderGUI("Discount Calculator",1);
 	}
 
 	protected void calculate(Order order) throws InterruptedException {

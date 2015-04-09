@@ -24,7 +24,7 @@ public class DistanceCalculator extends BaseCalculator{
 	
 	public DistanceCalculator(ActorRef ref){
 		deliveryRef = ref;
-		gui = new OrderGUI("Distance Calculator");
+		gui = new OrderGUI("Distance Calculator",3);
 	}
 	
 	protected void calculate(Order order) throws InterruptedException {
