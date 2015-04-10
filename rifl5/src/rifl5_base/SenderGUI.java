@@ -68,8 +68,10 @@ public class SenderGUI {
 		btnGenerate.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				btnGenerate.setEnabled(false);
-				RIFLCore.command = Command.generate;
+				if(btnGenerate.isEnabled()) {
+					btnGenerate.setEnabled(false);
+					RIFLCore.command = Command.generate;
+				}
 			}
 		});
 		panel_2.add(btnGenerate);
@@ -78,9 +80,11 @@ public class SenderGUI {
 		btnSend.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				btnSend.setEnabled(false);
-				RIFLCore.command = Command.send;
-				txtGenerated.setText("");
+				if(btnSend.isEnabled()) {
+					btnSend.setEnabled(false);
+					RIFLCore.command = Command.send;
+					txtGenerated.setText("");
+				}
 			}
 		});
 		btnSend.setEnabled(false);

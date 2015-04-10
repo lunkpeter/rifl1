@@ -77,15 +77,17 @@ public class OrderGUI {
 		btnCalculate.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				btnCalculate.setEnabled(false);
-				if(LBL_CALCULATE.equals(btnCalculate.getText())) {
-					canCalculate = true;
-					btnCalculate.setText(LBL_SEND);
-				} else if(LBL_SEND.equals(btnCalculate.getText())) {
-					canSend = true;
-					btnCalculate.setText(LBL_CALCULATE);
-					txtAfter.setText("");
-					txtBefore.setText("");
+				if(btnCalculate.isEnabled()) {
+					btnCalculate.setEnabled(false);
+					if(LBL_CALCULATE.equals(btnCalculate.getText())) {
+						canCalculate = true;
+						btnCalculate.setText(LBL_SEND);
+					} else if(LBL_SEND.equals(btnCalculate.getText())) {
+						canSend = true;
+						btnCalculate.setText(LBL_CALCULATE);
+						txtAfter.setText("");
+						txtBefore.setText("");
+					}
 				}
 			}
 		});
