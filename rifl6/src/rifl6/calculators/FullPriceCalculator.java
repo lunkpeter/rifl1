@@ -21,14 +21,12 @@ public class FullPriceCalculator extends BaseCalculator {
 		if(!AUTOMATIC)
 			gui = new OrderGUI("Full Price Calculator",5);
 	}
-
-	
 	
 	@Override
 	public void run() {
-		//add order to lists based on sender
+		isrunning=true;
 		while(isrunning) {
-			if(orders.size()>0) {
+			if(orders.size()>0 && delivOrders.size()>0) {
 				try {
 					OrderMessage delivOrderMessage = null;
 					OrderMessage priceOrderMessage = null;
@@ -50,22 +48,24 @@ public class FullPriceCalculator extends BaseCalculator {
 							
 						} else {
 							gui.setOrder(priceOrder);
-							
 							while(!gui.canCalculate)
 								Thread.sleep(100);
 							gui.canCalculate = false;
 						}
 						calculate(delivOrder, priceOrder);
 						
-						gui.setAfter(priceOrder);
-						while(!gui.canSend)
-							Thread.sleep(100);
-						gui.canSend = false;
+						if(AUTOMATIC || gui == null) {
+							
+						} else {
+							gui.setAfter(priceOrder);
+							while(!gui.canSend)
+								Thread.sleep(100);
+							gui.canSend = false;
+						}
+						send(priceOrderMessage);
 						
 						delivOrders.remove(delivOrderMessage);
 						orders.remove(priceOrderMessage);
-						
-						send(priceOrderMessage);
 					} else {
 						Thread.sleep(100);
 					}

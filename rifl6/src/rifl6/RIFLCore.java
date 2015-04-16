@@ -39,12 +39,44 @@ public class RIFLCore {
 		try {
 			BaseCalculator full = new FullPriceCalculator();
 			BaseCalculator net = new NetPriceCalculator(full);
-			BaseCalculator delivPostal = new DeliveryCalculator(full);
-			BaseCalculator delivPrivate = new DeliveryCalculator(full);
-			BaseCalculator delivTakeAway = new DeliveryCalculator(full);
+			BaseCalculator delivPostal = new DeliveryCalculator(full,"Postal");
+			BaseCalculator delivPrivate = new DeliveryCalculator(full,"Private");
+			BaseCalculator delivTakeAway = new DeliveryCalculator(full,"Take away");
 			BaseCalculator disc = new DiscountCalculator(net);
 			BaseCalculator dist = new DistanceCalculator(delivPostal, delivPrivate, delivTakeAway);
 			BaseCalculator orderPrice = new OrderPriceCalculator(dist, disc);
+			
+			List<Thread> threads = new ArrayList<Thread>();
+			threads.add(new Thread(full));
+			threads.add(new Thread(net));
+			threads.add(new Thread(delivPostal));
+			threads.add(new Thread(delivPrivate));
+			threads.add(new Thread(delivTakeAway));
+			threads.add(new Thread(disc));
+			threads.add(new Thread(dist));
+			threads.add(new Thread(orderPrice));
+			
+			for (Thread thread : threads) {
+				thread.start();
+			}
+			
+//			Thread fT = new Thread(full);
+//			fT.start();
+//			Thread nT = new Thread(net);
+//			nT.start();
+//			Thread dpoT = new Thread(delivPostal);
+//			dpoT.start();
+//			Thread dprT = new Thread(delivPrivate);
+//			dprT.start();
+//			Thread dtaT = new Thread(delivTakeAway);
+//			dtaT.start();
+//			Thread dcT = new Thread(disc);
+//			dcT.start();
+//			Thread dtT = new Thread(dist);
+//			dtT.start();
+//			Thread oT = new Thread(orderPrice);
+//			oT.start();
+			
 			if(!BaseCalculator.AUTOMATIC)
 				gui = new SenderGUI("Order Creator");
 			else {
@@ -78,6 +110,9 @@ public class RIFLCore {
 								} else if("2".equals(param)){
 									orders.add(craeteTakeAwayOrder());
 									command = Command.send;
+								} else if("send".equals(param)) {
+								} else {
+									System.out.println("Bad parameter: \""+param+"\"");
 								}
 							}
 						}
@@ -107,7 +142,7 @@ public class RIFLCore {
 						
 						try {
 							orderPrice.addOrder(serializeOrder(message));
-							System.out.println("Order sent");
+							System.out.println("Order sent: "+order.getId());
 	
 						} catch (Exception e) {
 							System.err.println("Problem while sending order!");

@@ -7,6 +7,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.UUID;
 
 import datamodel.Order;
@@ -28,17 +29,33 @@ public abstract class BaseCalculator implements Runnable {
 				OrderMessage orderMessage = orders.get(0);
 				Order order = orderMessage.getOrder();
 				try {
-					calculate(order);
 					if(AUTOMATIC || gui==null) {
-						System.out.println(this.getClass().getName()+" AFTER CALC" + orderMessage);
+						calculate(order);
+						//System.out.println(this.getClass().getName()+" AFTER CALC" + orderMessage);
+						Thread.sleep((new Random()).nextInt(100)*100);
 					} else {
+						gui.setOrder(order);
+						while(!gui.canCalculate)
+							Thread.sleep(100);
+						gui.canCalculate = false;
+						calculate(order);
+						
 						gui.setAfter(order);
 						while(!gui.canSend)
 							Thread.sleep(100);
 						gui.canSend = false;
 					}
 					send(orderMessage);
+					orders.remove(orderMessage);
 				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+			else {
+				try {
+					Thread.sleep(100);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}

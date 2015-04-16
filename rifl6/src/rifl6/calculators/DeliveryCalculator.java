@@ -17,10 +17,10 @@ public class DeliveryCalculator extends BaseCalculator{
 	
 	BaseCalculator fullPriceRef;
 	
-	public DeliveryCalculator(BaseCalculator ref){
+	public DeliveryCalculator(BaseCalculator ref, String name){
 		fullPriceRef = ref;
 		if(!AUTOMATIC)
-			gui = new OrderGUI("Delivery Calculator",4);
+			gui = new OrderGUI(name+" delivery Calculator",4);
 	}
 	
 	protected void calculate(Order order) throws InterruptedException {
