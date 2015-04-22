@@ -9,19 +9,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import com.sample.DroolsManager;
-import com.sample.DroolsManager.Event.ProcessType;
-
 import rifl6.base.BaseCalculator;
 import rifl6.base.OrderMessage;
-import rifl6.base.SenderGUI;
 import rifl6.base.OrderMessage.Sender;
+import rifl6.base.SenderGUI;
 import rifl6.calculators.DeliveryCalculator;
 import rifl6.calculators.DiscountCalculator;
 import rifl6.calculators.DistanceCalculator;
 import rifl6.calculators.FullPriceCalculator;
 import rifl6.calculators.NetPriceCalculator;
 import rifl6.calculators.OrderPriceCalculator;
+
+import com.sample.DroolsManager;
+import com.sample.DroolsManager.Event.ProcessType;
+
 import datamodel.CustomerData;
 import datamodel.DeliveryData;
 import datamodel.DeliveryMethod;
@@ -62,6 +63,8 @@ public class RIFLCore {
 			for (Thread thread : threads) {
 				thread.start();
 			}
+			
+			(new Thread(DroolsManager.getInstance())).start();
 			
 //			Thread fT = new Thread(full);
 //			fT.start();
@@ -158,14 +161,7 @@ public class RIFLCore {
 
 			}
 			
-			full.isrunning = false;
-			net.isrunning = false;
-			delivPostal.isrunning = false;
-			delivPrivate.isrunning = false;
-			delivTakeAway.isrunning = false;
-			disc.isrunning = false;
-			dist.isrunning = false;
-			orderPrice.isrunning = false;
+			BaseCalculator.isrunning = false;
 		} catch (Exception ex) {
 			System.err.println(ex.getMessage());
 		} finally {

@@ -7,7 +7,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.UUID;
 
 import com.sample.DroolsManager;
@@ -25,43 +24,20 @@ public abstract class BaseCalculator implements Runnable {
 	protected abstract void calculate(Order order) throws InterruptedException;
 	protected OrderGUI gui;
 	protected List<OrderMessage> orders = new ArrayList<OrderMessage>();
-	public boolean isrunning;
+	public static boolean isrunning = true;
 	public static final boolean AUTOMATIC = true;
 	protected static boolean FULL_CONSOLE_LOG = false;
 	protected ProcessType type;
 	
 	public void run() {
-		isrunning = true;
+		//isrunning = true;
 		while(isrunning) {
 			if(orders.size()>0) {
 				OrderMessage orderMessage = orders.get(0);
 				Order order = orderMessage.getOrder();
 				int startTime = (int) System.currentTimeMillis();
-				{
-					Event e = new Event();
-					e.setCalculatorID(id);
-					e.setOrderID(order.getId());
-					e.setType(Type.Start);
-					e.setProcessType(type);
-					e.setTimestamp(startTime);
-					switch (order.getDeliveryData().getDeliveryMethod()) {
-					case PostalDelivery:
-						e.setDeliveryMethod(EventDeliveryMethod.PostalDelivery);
-						break;
-
-					case PrivateDelivery:
-						e.setDeliveryMethod(EventDeliveryMethod.PrivateDelivery);
-						break;
-
-					case TakeAway:
-						e.setDeliveryMethod(EventDeliveryMethod.TakeAway);
-						break;
-					default:
-						break;
-					}
-					
-					DroolsManager.getInstance().addEvent(e);
-				}
+				sendEvent(order, startTime, Type.Start);
+				
 				try {
 					if(AUTOMATIC || gui==null) {
 						calculate(order);
@@ -82,32 +58,7 @@ public abstract class BaseCalculator implements Runnable {
 					send(orderMessage);
 
 					int stopTime = (int) System.currentTimeMillis();
-					{
-						Event e = new Event();
-						e.setCalculatorID(id);
-						e.setOrderID(order.getId());
-						e.setType(Type.End);
-						e.setProcessType(type);
-						e.setTimestamp(stopTime);
-						e.setProcessTime(stopTime-startTime);
-						switch (order.getDeliveryData().getDeliveryMethod()) {
-						case PostalDelivery:
-							e.setDeliveryMethod(EventDeliveryMethod.PostalDelivery);
-							break;
-
-						case PrivateDelivery:
-							e.setDeliveryMethod(EventDeliveryMethod.PrivateDelivery);
-							break;
-
-						case TakeAway:
-							e.setDeliveryMethod(EventDeliveryMethod.TakeAway);
-							break;
-						default:
-							break;
-						}
-						
-						DroolsManager.getInstance().addEvent(e);
-					}
+					sendEvent(order, stopTime, Type.End);
 					
 					orders.remove(orderMessage);
 				} catch (InterruptedException e) {
@@ -124,6 +75,32 @@ public abstract class BaseCalculator implements Runnable {
 			}
 		}
 	
+	}
+
+	private void sendEvent(Order order, int startTime, Type start) {
+		Event e = new Event();
+		e.setCalculatorID(id);
+		e.setOrderID(order.getId());
+		e.setType(start);
+		e.setProcessType(type);
+		e.setTimestamp(startTime);
+		switch (order.getDeliveryData().getDeliveryMethod()) {
+		case PostalDelivery:
+			e.setDeliveryMethod(EventDeliveryMethod.PostalDelivery);
+			break;
+
+		case PrivateDelivery:
+			e.setDeliveryMethod(EventDeliveryMethod.PrivateDelivery);
+			break;
+
+		case TakeAway:
+			e.setDeliveryMethod(EventDeliveryMethod.TakeAway);
+			break;
+		default:
+			break;
+		}
+		
+		DroolsManager.getInstance().addEvent(e);
 	}
 
 	protected byte[] serializeOrder(OrderMessage order) throws IOException {

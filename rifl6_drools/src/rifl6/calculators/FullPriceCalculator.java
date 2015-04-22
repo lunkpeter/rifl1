@@ -4,16 +4,17 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import rifl6.base.BaseCalculator;
+import rifl6.base.OrderGUI;
+import rifl6.base.OrderMessage;
+import rifl6.base.OrderMessage.Sender;
+
 import com.sample.DroolsManager;
 import com.sample.DroolsManager.Event;
 import com.sample.DroolsManager.Event.EventDeliveryMethod;
 import com.sample.DroolsManager.Event.ProcessType;
 import com.sample.DroolsManager.Event.Type;
 
-import rifl6.base.BaseCalculator;
-import rifl6.base.OrderGUI;
-import rifl6.base.OrderMessage;
-import rifl6.base.OrderMessage.Sender;
 import datamodel.DeliveryData;
 import datamodel.Order;
 import datamodel.PriceData;
@@ -37,7 +38,7 @@ public class FullPriceCalculator extends BaseCalculator {
 				try {
 					OrderMessage delivOrderMessage = null;
 					OrderMessage priceOrderMessage = null;
-					
+
 					for (OrderMessage dO : delivOrders) {
 						for (OrderMessage pO : orders) {
 							if(dO.getOrder().getId()==pO.getOrder().getId()) {
@@ -130,6 +131,13 @@ public class FullPriceCalculator extends BaseCalculator {
 						Thread.sleep(100);
 					}
 				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			} else {
+				try {
+					Thread.sleep(100);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}

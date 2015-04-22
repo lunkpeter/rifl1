@@ -3,20 +3,25 @@ package com.sample;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Queue;
+import java.util.concurrent.ArrayBlockingQueue;
 
 import org.kie.api.KieServices;
 import org.kie.api.logger.KieRuntimeLogger;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
 
+import rifl6.base.BaseCalculator;
+
 /**
  * This is a sample class to launch a rule.
  */
-public class DroolsManager {
+public class DroolsManager implements Runnable{
 
     private KieServices ks;
 	private KieContainer kContainer;
 	private KieSession kSession;
+	private Queue<Event> eventQueue;
 
 	private static DroolsManager eINSTANCE = null;
 	private KieRuntimeLogger log;
@@ -35,19 +40,39 @@ public class DroolsManager {
         	DateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
         	Date date = new Date();
         	log = ks.getLoggers().newFileLogger(kSession, "logs/rifl_"+dateFormat.format(date));
+        	eventQueue = new ArrayBlockingQueue<Event>(100);
         } catch (Throwable t) {
             t.printStackTrace();
         }
     }
 	
-	public synchronized void addEvent(Event e) {
-		kSession.insert(e);
-		kSession.fireAllRules();
+	public void addEvent(Event e) {
+		eventQueue.add(e);
 	}
 	
 	public void dispose() {
 		log.close();
 		kSession.dispose();
+	}
+
+	@Override
+	public void run() {
+		while (BaseCalculator.isrunning) {
+			if(eventQueue.size()>0) {
+				while (eventQueue.size()>0) {
+					Event e = eventQueue.poll();
+					kSession.insert(e);
+				}
+				kSession.fireAllRules();
+			} else {
+				try {
+					Thread.sleep(100);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
 	}
 
     public static class Event {

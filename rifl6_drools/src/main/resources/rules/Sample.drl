@@ -8,7 +8,7 @@ import com.sample.DroolsManager.Event.EventDeliveryMethod;
  
 declare Event
  @role(event)
- @expires(180s)
+ @expires(60s)
 end
 
 
