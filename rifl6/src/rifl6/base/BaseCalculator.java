@@ -32,7 +32,7 @@ public abstract class BaseCalculator implements Runnable {
 					if(AUTOMATIC || gui==null) {
 						calculate(order);
 						//System.out.println(this.getClass().getName()+" AFTER CALC" + orderMessage);
-						Thread.sleep((new Random()).nextInt(100)*100);
+//						Thread.sleep((new Random()).nextInt(100)*100);
 					} else {
 						gui.setOrder(order);
 						while(!gui.canCalculate)
