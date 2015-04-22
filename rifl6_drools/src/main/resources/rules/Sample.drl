@@ -1,0 +1,140 @@
+package com.sample
+
+import com.sample.DroolsManager;
+import com.sample.DroolsManager.Event;
+import com.sample.DroolsManager.Event.Type;
+import com.sample.DroolsManager.Event.ProcessType;
+import com.sample.DroolsManager.Event.EventDeliveryMethod;
+ 
+declare Event
+ @role(event)
+ @expires(180s)
+end
+
+
+
+// ********************************************************************************************************
+// Helper rules
+
+/*rule "Test"
+when
+	$e_end : Event(processType == ProcessType.FULL, $orderID : orderID, type==Type.End, $ts_end : timestamp)
+	$e_start :  Event(processType == ProcessType.ORDER, orderID==$orderID, type==Type.Start, $ts_start : timestamp)
+then 
+	print("Order id: "+$orderID+"\nFull process time: "+($ts_end-$ts_start)+"millisec");
+end*/
+
+/*rule "Calculate process time" salience 1
+when
+	$e_end : Event($pt : processType, $orderID : orderID, type==Type.End, $ts_end : timestamp)
+	$e_start :  Event(processType == $pt, orderID==$orderID, type==Type.Start, $ts_start : timestamp)
+then
+	modify($e_end) { 
+		setProcessTime($ts_end-$ts_start);
+	}
+end*/
+
+
+
+// ********************************************************************************************************
+// First
+
+rule "Wait for net"
+when
+	$e3 : Event(processType == ProcessType.FULL, $orderID : orderID, type==Type.Start, $ts3 : timestamp)
+	$e1 : Event(processType == ProcessType.DELIVERY, type==Type.End, orderID==$orderID, $ts1 : timestamp)
+	eval($ts3 - $ts1 > Event.TIMEOUT)
+then 
+	print("Wait too much for net.\nWait time: "+($ts3-$ts1));
+end
+
+rule "Wait for delivery"
+when
+	$e3 : Event(processType == ProcessType.FULL, $orderID : orderID, type==Type.Start, $ts3 : timestamp)
+	$e1 : Event(processType == ProcessType.NET, type==Type.End, orderID==$orderID, $ts1 : timestamp)
+	eval($ts3 - $ts1 > Event.TIMEOUT)
+then 
+	print("Wait too much for delivery.\nWait time: "+($ts3-$ts1));
+end
+
+
+
+// ********************************************************************************************************
+// Second
+
+rule "Too much postal delivery started"
+when
+	$post: Long(doubleValue>=0) from 
+		accumulate ( $e_postal : Event( processType==ProcessType.DELIVERY, type==Type.Start, deliveryMethod==EventDeliveryMethod.PostalDelivery ) over window:time(20s)  , 
+			count( $e_postal ) ) 
+	$priv: Long(doubleValue>=0) from 
+		accumulate ( $e_postal : Event( processType==ProcessType.DELIVERY, type==Type.Start, deliveryMethod==EventDeliveryMethod.PrivateDelivery ) over window:time(20s)  , 
+			count( $e_postal ) ) 
+	$ta: Long(doubleValue>=0) from 
+		accumulate ( $e_postal : Event( processType==ProcessType.DELIVERY, type==Type.Start, deliveryMethod==EventDeliveryMethod.TakeAway ) over window:time(20s)  , 
+			count( $e_postal ) ) 
+	eval($post > $ta*Event.MORE_DELIVERY) and eval($post > $priv*Event.MORE_DELIVERY)
+then
+	print("Too much postal delivery started.\nPostal num: "+$post+"\nPrivate num: "+$priv+"\nTake away num: "+$ta);
+end
+
+rule "Too much private delivery started"
+when
+	$post: Long(doubleValue>=0) from 
+		accumulate ( $e_postal : Event( processType==ProcessType.DELIVERY, type==Type.Start, deliveryMethod==EventDeliveryMethod.PostalDelivery ) over window:time(20s)  , 
+			count( $e_postal ) ) 
+	$priv: Long(doubleValue>=0) from 
+		accumulate ( $e_postal : Event( processType==ProcessType.DELIVERY, type==Type.Start, deliveryMethod==EventDeliveryMethod.PrivateDelivery ) over window:time(20s)  , 
+			count( $e_postal ) ) 
+	$ta: Long(doubleValue>=0) from 
+		accumulate ( $e_postal : Event( processType==ProcessType.DELIVERY, type==Type.Start, deliveryMethod==EventDeliveryMethod.TakeAway ) over window:time(20s)  , 
+			count( $e_postal ) ) 
+	eval($priv > $ta*Event.MORE_DELIVERY) and eval($priv > $post*Event.MORE_DELIVERY)
+then
+	print("Too much private delivery started.\nPostal num: "+$post+"\nPrivate num: "+$priv+"\nTake away num: "+$ta);
+end
+
+rule "Too much take away delivery started"
+when
+	$post: Long(doubleValue>=0) from 
+		accumulate ( $e_postal : Event( processType==ProcessType.DELIVERY, type==Type.Start, deliveryMethod==EventDeliveryMethod.PostalDelivery ) over window:time(20s)  , 
+			count( $e_postal ) ) 
+	$priv: Long(doubleValue>=0) from 
+		accumulate ( $e_postal : Event( processType==ProcessType.DELIVERY, type==Type.Start, deliveryMethod==EventDeliveryMethod.PrivateDelivery ) over window:time(20s)  , 
+			count( $e_postal ) ) 
+	$ta: Long(doubleValue>=0) from 
+		accumulate ( $e_postal : Event( processType==ProcessType.DELIVERY, type==Type.Start, deliveryMethod==EventDeliveryMethod.TakeAway ) over window:time(20s)  , 
+			count( $e_postal ) ) 
+	eval($ta > $post*Event.MORE_DELIVERY) and eval($ta > $priv*Event.MORE_DELIVERY)
+then
+	print("Too much take away delivery started.\nPostal num: "+$post+"\nPrivate num: "+$priv+"\nTake away num: "+$ta);
+end
+
+
+
+// ********************************************************************************************************
+// Third
+
+rule "Task is too long to avg"
+when
+	$long_e : Event($cID : calculatorID, $long_pt : processTime, type == Type.End)
+	$avg_pt : Double(doubleValue>0) from
+		accumulate ( Event(this before $long_e, calculatorID == $cID, type==Type.End, $pt : processTime ) over window:length(20)  , 
+			average( $pt ) ) 
+	eval($long_pt >= $avg_pt*Event.TOO_LONG_AVG)
+then
+	print($long_e.getProcessType()+" run too long.\nCurrent run time: "+$long_pt+"\nAVG run time: "+$avg_pt);
+end
+
+
+
+// ********************************************************************************************************
+// Helper functions
+
+function void print(String m) {
+	System.out.println();
+	System.out.println("************************************");
+	System.out.println(m);
+	System.out.println("************************************");
+	System.out.println();
+}
