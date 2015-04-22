@@ -75,7 +75,7 @@ when
 			count( $e_postal ) ) 
 	eval($post > $ta*Event.MORE_DELIVERY) and eval($post > $priv*Event.MORE_DELIVERY)
 then
-	print("Too much postal delivery started.\nPostal num: "+$post+"\nPrivate num: "+$priv+"\nTake away num: "+$ta);
+	print("Too many postal delivery orders started.\nPostal num: "+$post+"\nPrivate num: "+$priv+"\nTake away num: "+$ta);
 end
 
 rule "Too much private delivery started"
@@ -91,7 +91,7 @@ when
 			count( $e_postal ) ) 
 	eval($priv > $ta*Event.MORE_DELIVERY) and eval($priv > $post*Event.MORE_DELIVERY)
 then
-	print("Too much private delivery started.\nPostal num: "+$post+"\nPrivate num: "+$priv+"\nTake away num: "+$ta);
+	print("Too many private delivery orders started.\nPostal num: "+$post+"\nPrivate num: "+$priv+"\nTake away num: "+$ta);
 end
 
 rule "Too much take away delivery started"
@@ -107,7 +107,7 @@ when
 			count( $e_postal ) ) 
 	eval($ta > $post*Event.MORE_DELIVERY) and eval($ta > $priv*Event.MORE_DELIVERY)
 then
-	print("Too much take away delivery started.\nPostal num: "+$post+"\nPrivate num: "+$priv+"\nTake away num: "+$ta);
+	print("Too many take away delivery orders started.\nPostal num: "+$post+"\nPrivate num: "+$priv+"\nTake away num: "+$ta);
 end
 
 
@@ -126,6 +126,22 @@ then
 	print($long_e.getProcessType()+" run too long.\nCurrent run time: "+$long_pt+"\nAVG run time: "+$avg_pt);
 end
 
+// ********************************************************************************************************
+// Fourth
+
+rule "Long_waiting_time"
+when
+	$orderEnded: Long(doubleValue>=0) from 
+		accumulate ( $e_order : Event( processType==ProcessType.ORDER, type==Type.End ) over window:time(30s)  , 
+			count( $e_order ) ) 
+	$distanceStarted: Long(doubleValue>=0) from 
+		accumulate ( $e_distance : Event( processType==ProcessType.DISTANCE, type==Type.Start ) over window:time(30s)  , 
+			count( $e_distance )) 
+	eval(($orderEnded-$distanceStarted)>Event.QUEUE_LENGTH) 
+
+then
+	print("The Queue for distance calculation is above "+ Event.QUEUE_LENGTH);
+end
 
 
 // ********************************************************************************************************

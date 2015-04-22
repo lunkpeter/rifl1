@@ -54,6 +54,7 @@ public class DroolsManager {
     	public static final int MORE_DELIVERY = 3;
     	public static final int TIMEOUT = 600;
     	public static final int TOO_LONG_AVG = 5;
+    	public static final int QUEUE_LENGTH = 2;
     	
     	public int timestamp;
 		private Integer calculatorID;

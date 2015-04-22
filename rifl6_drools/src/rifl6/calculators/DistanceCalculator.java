@@ -3,6 +3,8 @@ package rifl6.calculators;
 
 import java.io.IOException;
 
+import org.drools.core.audit.ThreadedWorkingMemoryFileLogger;
+
 import com.sample.DroolsManager.Event.ProcessType;
 
 import rifl6.base.BaseCalculator;

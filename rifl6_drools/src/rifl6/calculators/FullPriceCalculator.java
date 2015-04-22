@@ -153,6 +153,7 @@ public class FullPriceCalculator extends BaseCalculator {
 
 		priceData.setPrice(tempPrice + deliveryData.getDeliveryCost());
 		priceData.setNetPrice(tempNetPrice + deliveryData.getDeliveryCost());
+		Thread.sleep(1000);
 	}
 
 	@Override
