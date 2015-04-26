@@ -66,23 +66,6 @@ public class RIFLCore {
 			
 			(new Thread(DroolsManager.getInstance())).start();
 			
-//			Thread fT = new Thread(full);
-//			fT.start();
-//			Thread nT = new Thread(net);
-//			nT.start();
-//			Thread dpoT = new Thread(delivPostal);
-//			dpoT.start();
-//			Thread dprT = new Thread(delivPrivate);
-//			dprT.start();
-//			Thread dtaT = new Thread(delivTakeAway);
-//			dtaT.start();
-//			Thread dcT = new Thread(disc);
-//			dcT.start();
-//			Thread dtT = new Thread(dist);
-//			dtT.start();
-//			Thread oT = new Thread(orderPrice);
-//			oT.start();
-			
 			if(!BaseCalculator.AUTOMATIC)
 				gui = new SenderGUI("Order Creator");
 			else {

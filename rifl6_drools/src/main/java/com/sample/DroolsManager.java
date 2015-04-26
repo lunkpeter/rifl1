@@ -88,6 +88,7 @@ public class DroolsManager implements Runnable{
     	private ProcessType processType;
     	private EventDeliveryMethod deliveryMethod;
     	private int processTime;
+    	private Date date = new Date();
     	
     	public static enum Type {Start, End };
     	
@@ -152,6 +153,14 @@ public class DroolsManager implements Runnable{
 
 		public void setProcessTime(int processTime) {
 			this.processTime = processTime;
+		}
+
+		public Date getDate() {
+			return date;
+		}
+
+		public void setDate(Date date) {
+			this.date = date;
 		}
     }
 

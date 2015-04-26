@@ -8,6 +8,7 @@ import com.sample.DroolsManager.Event.EventDeliveryMethod;
  
 declare Event
  @role(event)
+ @timestamp(date)
  @expires(60s)
 end
 
@@ -18,10 +19,10 @@ end
 
 /*rule "Test"
 when
-	$e_end : Event(processType == ProcessType.FULL, $orderID : orderID, type==Type.End, $ts_end : timestamp)
+	$e_end : Event(processType == ProcessType.FULL, $orderID : orderID, type==Type.End, $ts_end : timestamp, $date : date)
 	$e_start :  Event(processType == ProcessType.ORDER, orderID==$orderID, type==Type.Start, $ts_start : timestamp)
 then 
-	print("Order id: "+$orderID+"\nFull process time: "+($ts_end-$ts_start)+"millisec");
+	print("Order id: "+$orderID+"\nFull process time: "+($ts_end-$ts_start)+"millisec\nDate: "+$date);
 end*/
 
 /*rule "Calculate process time" salience 1
@@ -34,27 +35,54 @@ then
 	}
 end*/
 
+/*rule "Task process time"
+when
+	$avg_pt : Double(doubleValue>0) from
+		accumulate ( Event(type==Type.End, $pt : processTime, processType==ProcessType.DISCOUNT ) over window:length(5)  , 
+			average( $pt ) ) 
+then
+	print("DISCOUNT avg run time: "+$avg_pt);
+end*/
 
+/*rule "B before A"
+when
+	$a : Event(processType == ProcessType.NET, type==Type.End, $orderID1 : orderID)
+	$b : Event(this before $a, processType == ProcessType.NET, type==Type.End, $orderID2 : orderID)
+then 
+	print($orderID2 + " before " + $orderID1);
+end*/
+
+/*rule "Task process time to avg"
+when
+	$long_e : Event(processType == ProcessType.NET, type == Type.End, $long_pt : processTime)
+	$avg_pt : Double(doubleValue>0) from
+		accumulate ( Event(this before $long_e, processType == ProcessType.NET, type==Type.End, $pt : processTime ) over window:length(3)  , 
+			average( $pt ) ) 
+then
+	print("Current run time: "+$long_pt+"\navg run time: "+$avg_pt);
+end*/
+
+			
 
 // ********************************************************************************************************
 // First
 
-rule "Wait for net"
-when
-	$e3 : Event(processType == ProcessType.FULL, $orderID : orderID, type==Type.Start, $ts3 : timestamp)
-	$e1 : Event(processType == ProcessType.DELIVERY, type==Type.End, orderID==$orderID, $ts1 : timestamp)
-	eval($ts3 - $ts1 > Event.TIMEOUT)
-then 
-	print("Wait too much for net.\nWait time: "+($ts3-$ts1));
-end
-
 rule "Wait for delivery"
 when
-	$e3 : Event(processType == ProcessType.FULL, $orderID : orderID, type==Type.Start, $ts3 : timestamp)
-	$e1 : Event(processType == ProcessType.NET, type==Type.End, orderID==$orderID, $ts1 : timestamp)
-	eval($ts3 - $ts1 > Event.TIMEOUT)
+	$e0 : Event(processType == ProcessType.NET, type==Type.End, $orderID : orderID, $ts0 : timestamp)
+	$e1 : Event(processType == ProcessType.DELIVERY, type==Type.End, orderID==$orderID, $ts1 : timestamp)
+	eval($ts0 - $ts1 > Event.TIMEOUT)
 then 
-	print("Wait too much for delivery.\nWait time: "+($ts3-$ts1));
+	print("Wait too much for delivery.\nWait time: "+($ts0-$ts1));
+end
+
+rule "Wait for net"
+when
+	$e0 : Event(processType == ProcessType.DELIVERY, type==Type.End, $orderID : orderID, $ts0 : timestamp)
+	$e1 : Event(processType == ProcessType.NET, type==Type.End, orderID==$orderID, $ts1 : timestamp)
+	eval($ts0 - $ts1 > Event.TIMEOUT)
+then 
+	print("Wait too much for net.\nWait time: "+($ts0-$ts1));
 end
 
 
@@ -117,9 +145,20 @@ end
 
 rule "Task is too long to avg"
 when
-	$long_e : Event($cID : calculatorID, $long_pt : processTime, type == Type.End)
+	$long_e : Event($cID : calculatorID, type == Type.End, $long_pt : processTime)
 	$avg_pt : Double(doubleValue>0) from
-		accumulate ( Event(this before $long_e, calculatorID == $cID, type==Type.End, $pt : processTime ) over window:length(20)  , 
+		accumulate ( Event(this before $long_e, calculatorID == $cID, type==Type.End, $pt : processTime ) over window:length(3)  , 
+			average( $pt ) ) 
+	eval($long_pt >= $avg_pt*Event.TOO_LONG_AVG)
+then
+	print($long_e.getProcessType()+" run too long.\nCurrent run time: "+$long_pt+"\nAVG run time: "+$avg_pt);
+end
+
+rule "Discount is too long to avg"
+when
+	$long_e : Event(processType == ProcessType.DISCOUNT, type == Type.End, $long_pt : processTime)
+	$avg_pt : Double(doubleValue>0) from
+		accumulate ( Event(this before $long_e, processType == ProcessType.DISCOUNT, type==Type.End, $pt : processTime ) over window:length(5)  , 
 			average( $pt ) ) 
 	eval($long_pt >= $avg_pt*Event.TOO_LONG_AVG)
 then

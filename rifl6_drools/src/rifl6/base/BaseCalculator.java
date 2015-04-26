@@ -36,7 +36,7 @@ public abstract class BaseCalculator implements Runnable {
 				OrderMessage orderMessage = orders.get(0);
 				Order order = orderMessage.getOrder();
 				int startTime = (int) System.currentTimeMillis();
-				sendEvent(order, startTime, Type.Start);
+				sendEvent(order, startTime, Type.Start, 0);
 				
 				try {
 					if(AUTOMATIC || gui==null) {
@@ -58,7 +58,7 @@ public abstract class BaseCalculator implements Runnable {
 					send(orderMessage);
 
 					int stopTime = (int) System.currentTimeMillis();
-					sendEvent(order, stopTime, Type.End);
+					sendEvent(order, stopTime, Type.End, stopTime-startTime);
 					
 					orders.remove(orderMessage);
 				} catch (InterruptedException e) {
@@ -77,13 +77,14 @@ public abstract class BaseCalculator implements Runnable {
 	
 	}
 
-	private void sendEvent(Order order, int startTime, Type start) {
+	private void sendEvent(Order order, int timestamp, Type eventType, int pTime) {
 		Event e = new Event();
 		e.setCalculatorID(id);
 		e.setOrderID(order.getId());
-		e.setType(start);
+		e.setType(eventType);
 		e.setProcessType(type);
-		e.setTimestamp(startTime);
+		e.setTimestamp(timestamp);
+		e.setProcessTime(pTime);
 		switch (order.getDeliveryData().getDeliveryMethod()) {
 		case PostalDelivery:
 			e.setDeliveryMethod(EventDeliveryMethod.PostalDelivery);

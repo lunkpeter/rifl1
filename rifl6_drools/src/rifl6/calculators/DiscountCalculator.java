@@ -18,6 +18,8 @@ public class DiscountCalculator extends BaseCalculator {
 	private static double priceThreshold2 = 200000;
 	BaseCalculator netPriceRef;
 
+	int a = 0;
+	
 	public DiscountCalculator(BaseCalculator ref){
 		netPriceRef = ref;
 		type = ProcessType.DISCOUNT;
@@ -28,7 +30,7 @@ public class DiscountCalculator extends BaseCalculator {
 	protected void calculate(Order order) throws InterruptedException {
 		PriceData data = order.getPriceData();
 		double tempPrice = data.getPrice();
-		Thread.sleep(500);
+//		Thread.sleep(1500);
 		if (data.getPrice() >= priceThreshold1) {
 			if (data.getPrice() >= priceThreshold2) {
 				data.setPrice(tempPrice * 0.8);
@@ -36,7 +38,11 @@ public class DiscountCalculator extends BaseCalculator {
 				data.setPrice(tempPrice * 0.9);
 			}
 		}
-		
+		a++;
+		if(a>5) {
+			Thread.sleep(1500);
+			a=0;
+		}
 		
 
 	}
