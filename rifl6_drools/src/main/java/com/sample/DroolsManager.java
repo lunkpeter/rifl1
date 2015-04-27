@@ -18,7 +18,7 @@ import rifl6.base.BaseCalculator;
  */
 public class DroolsManager implements Runnable{
 
-    private KieServices ks;
+	private KieServices ks;
 	private KieContainer kContainer;
 	private KieSession kSession;
 	private Queue<Event> eventQueue;
@@ -33,18 +33,18 @@ public class DroolsManager implements Runnable{
 	}
 	
 	private DroolsManager() {
-    	try {
-            ks = KieServices.Factory.get();
-    	    kContainer = ks.getKieClasspathContainer();
-        	kSession = kContainer.newKieSession("ksession-rules");
-        	DateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd_HH");
-        	Date date = new Date();
-        	log = ks.getLoggers().newFileLogger(kSession, "logs/rifl_"+dateFormat.format(date));
-        	eventQueue = new ArrayBlockingQueue<Event>(1000);
-        } catch (Throwable t) {
-            t.printStackTrace();
-        }
-    }
+		try {
+			ks = KieServices.Factory.get();
+			kContainer = ks.getKieClasspathContainer();
+			kSession = kContainer.newKieSession("ksession-rules");
+			DateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd_HH");
+			Date date = new Date();
+			log = ks.getLoggers().newFileLogger(kSession, "logs/rifl_"+dateFormat.format(date));
+			eventQueue = new ArrayBlockingQueue<Event>(1000);
+		} catch (Throwable t) {
+			t.printStackTrace();
+		}
+	}
 	
 	public void addEvent(Event e) {
 		eventQueue.add(e);
@@ -75,31 +75,27 @@ public class DroolsManager implements Runnable{
 		}
 	}
 
-    public static class Event {
-    	public static final int MORE_DELIVERY = 3;
-    	public static final int TIMEOUT = 600;
-    	public static final int TOO_LONG_AVG = 5;
-    	public static final int QUEUE_LENGTH = 2;
-    	
-    	public int timestamp;
+	public static class Event {
+		public static final int MORE_DELIVERY = 3;
+		public static final int TIMEOUT = 600;
+		public static final int TOO_LONG_AVG = 5;
+		public static final int QUEUE_LENGTH = 2;
+		
+		public int timestamp;
 		private Integer calculatorID;
-    	private Long orderID;
-    	private Type type;
-    	private ProcessType processType;
-    	private EventDeliveryMethod deliveryMethod;
-    	private int processTime;
-    	private Date date = new Date();
-    	
-    	public static enum Type {Start, End };
-    	
-    	public static enum ProcessType { ORDER, NET, FULL, DISTANCE, DISCOUNT, DELIVERY };
-    	public static enum EventDeliveryMethod {
-    		TakeAway,
-    		PrivateDelivery,
-    		PostalDelivery;
-    	}
-    	
-    	public Integer getTimestamp() {
+		private Long orderID;
+		private Type type;
+		private ProcessType processType;
+		private EventDeliveryMethod deliveryMethod;
+		private int processTime;
+		private Date date = new Date();
+		
+		public static enum Type {Start, End };
+		
+		public static enum ProcessType { ORDER, NET, FULL, DISTANCE, DISCOUNT, DELIVERY };
+		public static enum EventDeliveryMethod { TakeAway, PrivateDelivery, PostalDelivery };
+		
+		public Integer getTimestamp() {
 			return timestamp;
 		}
 
@@ -162,6 +158,6 @@ public class DroolsManager implements Runnable{
 		public void setDate(Date date) {
 			this.date = date;
 		}
-    }
+	}
 
 }

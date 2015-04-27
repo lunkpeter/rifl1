@@ -67,22 +67,22 @@ end*/
 // ********************************************************************************************************
 // First
 
-rule "Wait for delivery"
+rule "Wait for net"
 when
 	$e0 : Event(processType == ProcessType.NET, type==Type.End, $orderID : orderID, $ts0 : timestamp)
 	$e1 : Event(processType == ProcessType.DELIVERY, type==Type.End, orderID==$orderID, $ts1 : timestamp)
 	eval($ts0 - $ts1 > Event.TIMEOUT)
 then 
-	print("Wait too much for delivery.\nWait time: "+($ts0-$ts1));
+	print("Wait too much for net line.\nWait time: "+($ts0-$ts1));
 end
 
-rule "Wait for net"
+rule "Wait for delivery"
 when
 	$e0 : Event(processType == ProcessType.DELIVERY, type==Type.End, $orderID : orderID, $ts0 : timestamp)
 	$e1 : Event(processType == ProcessType.NET, type==Type.End, orderID==$orderID, $ts1 : timestamp)
 	eval($ts0 - $ts1 > Event.TIMEOUT)
 then 
-	print("Wait too much for net.\nWait time: "+($ts0-$ts1));
+	print("Wait too much for delivery line.\nWait time: "+($ts0-$ts1));
 end
 
 
@@ -151,7 +151,6 @@ when
 			average( $pt ) ) 
 	eval($long_pt >= $avg_pt*Event.TOO_LONG_AVG)
 then
-	System.out.println();
 	print($cID+" ("+$long_e.getProcessType()+") run too long.\nCurrent run time: "+$long_pt+"\nAVG run time: "+$avg_pt);
 end
 
