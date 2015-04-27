@@ -37,10 +37,10 @@ public class DroolsManager implements Runnable{
             ks = KieServices.Factory.get();
     	    kContainer = ks.getKieClasspathContainer();
         	kSession = kContainer.newKieSession("ksession-rules");
-        	DateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
+        	DateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd_HH");
         	Date date = new Date();
         	log = ks.getLoggers().newFileLogger(kSession, "logs/rifl_"+dateFormat.format(date));
-        	eventQueue = new ArrayBlockingQueue<Event>(100);
+        	eventQueue = new ArrayBlockingQueue<Event>(1000);
         } catch (Throwable t) {
             t.printStackTrace();
         }
@@ -62,8 +62,8 @@ public class DroolsManager implements Runnable{
 				while (eventQueue.size()>0) {
 					Event e = eventQueue.poll();
 					kSession.insert(e);
+					kSession.fireAllRules();
 				}
-				kSession.fireAllRules();
 			} else {
 				try {
 					Thread.sleep(100);

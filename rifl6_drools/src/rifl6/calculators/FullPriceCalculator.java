@@ -27,7 +27,7 @@ public class FullPriceCalculator extends BaseCalculator {
 	public FullPriceCalculator(){
 		type = ProcessType.FULL;
 		if(!AUTOMATIC)
-			gui = new OrderGUI("Full Price Calculator",5);
+			gui = new OrderGUI("Full Price Calculator",7);
 	}
 	
 	@Override

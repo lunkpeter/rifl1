@@ -10,6 +10,7 @@ import rifl6.base.OrderGUI;
 import rifl6.base.OrderMessage;
 import rifl6.base.OrderMessage.Sender;
 import datamodel.DeliveryData;
+import datamodel.DeliveryMethod;
 import datamodel.Order;
 import datamodel.PriceData;
 
@@ -19,11 +20,21 @@ public class DeliveryCalculator extends BaseCalculator{
 	
 	BaseCalculator fullPriceRef;
 	
-	public DeliveryCalculator(BaseCalculator ref, ProcessType type){
+	public DeliveryCalculator(BaseCalculator ref, DeliveryMethod method){
 		fullPriceRef = ref;
-		this.type=type;
+		this.type=ProcessType.DELIVERY;
+		int offset = 0;
+		String t = "Postal";
+		if(method==DeliveryMethod.PrivateDelivery) {
+			offset=1;
+			t = "Private";
+		}
+		else if(method==DeliveryMethod.TakeAway) {
+			offset=2;
+			t = "Take Away";
+		}
 		if(!AUTOMATIC)
-			gui = new OrderGUI(type+" delivery Calculator",4);
+			gui = new OrderGUI(t+" Delivery Calculator",4+offset);
 	}
 	
 	protected void calculate(Order order) throws InterruptedException {

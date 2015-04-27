@@ -24,7 +24,7 @@ import java.awt.Color;
 public class SenderGUI {
 
 	public static final int HEIGHT = 450;
-	public static final int WIDTH = 350;
+	public static final int WIDTH = 351;
 	private JFrame frmDefault;
 	private JTextArea txtGenerated;
 	private JButton btnGenerate;

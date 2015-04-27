@@ -43,9 +43,9 @@ public class RIFLCore {
 		try {
 			BaseCalculator full = new FullPriceCalculator();
 			BaseCalculator net = new NetPriceCalculator(full);
-			BaseCalculator delivPostal = new DeliveryCalculator(full,ProcessType.DELIVERY);
-			BaseCalculator delivPrivate = new DeliveryCalculator(full,ProcessType.DELIVERY);
-			BaseCalculator delivTakeAway = new DeliveryCalculator(full,ProcessType.DELIVERY);
+			BaseCalculator delivPostal = new DeliveryCalculator(full,DeliveryMethod.PostalDelivery);
+			BaseCalculator delivPrivate = new DeliveryCalculator(full,DeliveryMethod.PrivateDelivery);
+			BaseCalculator delivTakeAway = new DeliveryCalculator(full,DeliveryMethod.TakeAway);
 			BaseCalculator disc = new DiscountCalculator(net);
 			BaseCalculator dist = new DistanceCalculator(delivPostal, delivPrivate, delivTakeAway);
 			BaseCalculator orderPrice = new OrderPriceCalculator(dist, disc);

@@ -16,7 +16,7 @@ import datamodel.Order;
 
 public class OrderGUI {
 	private static final int HEIGHT = 300;
-	private static final int WIDTH = 600;
+	private static final int WIDTH = 523;
 	private static final String LBL_CALCULATE="Calculate";
 	private static final String LBL_SEND="Send";
 	
@@ -54,7 +54,7 @@ public class OrderGUI {
 		
 		txtBefore = new JTextArea();
 		txtBefore.setEditable(false);
-		txtBefore.setColumns(20);
+		txtBefore.setColumns(18);
 		panel.add(txtBefore, BorderLayout.CENTER);
 		
 		JPanel panel_1 = new JPanel();
@@ -63,7 +63,7 @@ public class OrderGUI {
 		panel_1.setLayout(new BorderLayout(0, 0));
 		
 		txtAfter = new JTextArea();
-		txtAfter.setColumns(20);
+		txtAfter.setColumns(18);
 		txtAfter.setEditable(false);
 		panel_1.add(txtAfter, BorderLayout.CENTER);
 		
@@ -71,7 +71,7 @@ public class OrderGUI {
 		frmDefault.getContentPane().add(panel_2, BorderLayout.CENTER);
 		panel_2.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		
-		btnCalculate = new JButton("Calculate");
+		btnCalculate = new JButton(LBL_CALCULATE);
 		btnCalculate.setEnabled(false);
 		btnCalculate.setMinimumSize(new Dimension(175, 0));
 		btnCalculate.addMouseListener(new MouseAdapter() {

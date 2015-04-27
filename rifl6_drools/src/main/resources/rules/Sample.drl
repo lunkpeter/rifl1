@@ -143,27 +143,28 @@ end
 // ********************************************************************************************************
 // Third
 
-rule "Task is too long to avg"
+rule "Task is too long to avg" salience 10
 when
 	$long_e : Event($cID : calculatorID, type == Type.End, $long_pt : processTime)
 	$avg_pt : Double(doubleValue>0) from
-		accumulate ( Event(this before $long_e, calculatorID == $cID, type==Type.End, $pt : processTime ) over window:length(3)  , 
+		accumulate ( Event(this before $long_e, calculatorID == $cID, type==Type.End, $pt : processTime ) over window:length(10)  , 
 			average( $pt ) ) 
 	eval($long_pt >= $avg_pt*Event.TOO_LONG_AVG)
 then
-	print($long_e.getProcessType()+" run too long.\nCurrent run time: "+$long_pt+"\nAVG run time: "+$avg_pt);
+	System.out.println();
+	print($cID+" ("+$long_e.getProcessType()+") run too long.\nCurrent run time: "+$long_pt+"\nAVG run time: "+$avg_pt);
 end
 
-rule "Discount is too long to avg"
+/*rule "Discount is too long to avg"
 when
 	$long_e : Event(processType == ProcessType.DISCOUNT, type == Type.End, $long_pt : processTime)
 	$avg_pt : Double(doubleValue>0) from
-		accumulate ( Event(this before $long_e, processType == ProcessType.DISCOUNT, type==Type.End, $pt : processTime ) over window:length(5)  , 
+		accumulate ( Event(this before $long_e, processType == ProcessType.DISCOUNT, type==Type.End, $pt : processTime ) over window:length(3)  , 
 			average( $pt ) ) 
 	eval($long_pt >= $avg_pt*Event.TOO_LONG_AVG)
 then
-	print($long_e.getProcessType()+" run too long.\nCurrent run time: "+$long_pt+"\nAVG run time: "+$avg_pt);
-end
+	print($long_e.getProcessType()+" task run too long.\nCurrent run time: "+$long_pt+"\nAVG run time: "+$avg_pt);
+end*/
 
 // ********************************************************************************************************
 // Fourth
@@ -188,8 +189,8 @@ end
 
 function void print(String m) {
 	System.out.println();
-	System.out.println("************************************");
+	System.out.println("*****************************************");
 	System.out.println(m);
-	System.out.println("************************************");
+	System.out.println("*****************************************");
 	System.out.println();
 }
