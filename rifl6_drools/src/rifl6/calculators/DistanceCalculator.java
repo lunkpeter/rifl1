@@ -40,6 +40,7 @@ public class DistanceCalculator extends BaseCalculator{
 	protected void calculate(Order order) throws InterruptedException {
 		DeliveryData deliveryData = order.getDeliveryData();
 		CustomerData customerData = order.getCustomerData();
+		Thread.sleep(2000);
 		switch (customerData.getRegion()) {
 		case North:
 			deliveryData.setDeliveryCost(northDeliveryCost);

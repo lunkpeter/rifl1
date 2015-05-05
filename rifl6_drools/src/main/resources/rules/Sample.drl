@@ -147,7 +147,7 @@ rule "Task is too long to avg" salience 10
 when
 	$long_e : Event($cID : calculatorID, type == Type.End, $long_pt : processTime)
 	$avg_pt : Double(doubleValue>0) from
-		accumulate ( Event(this before $long_e, calculatorID == $cID, type==Type.End, $pt : processTime ) over window:length(10)  , 
+		accumulate ( Event(this before $long_e, calculatorID == $cID, type==Type.End, $pt : processTime ) over window:time(30s)  , 
 			average( $pt ) ) 
 	eval($long_pt >= $avg_pt*Event.TOO_LONG_AVG)
 then

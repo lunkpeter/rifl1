@@ -25,7 +25,7 @@ public abstract class BaseCalculator implements Runnable {
 	protected OrderGUI gui;
 	protected List<OrderMessage> orders = new ArrayList<OrderMessage>();
 	public static boolean isrunning = true;
-	public static final boolean AUTOMATIC = true;
+	public static final boolean AUTOMATIC = false;
 	protected static boolean FULL_CONSOLE_LOG = false;
 	protected ProcessType type;
 	
