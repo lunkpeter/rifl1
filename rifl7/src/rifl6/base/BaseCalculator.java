@@ -12,6 +12,9 @@ import java.util.UUID;
 
 
 
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
+
 import datamodel.Order;
 
 public abstract class BaseCalculator implements Runnable {
@@ -20,7 +23,7 @@ public abstract class BaseCalculator implements Runnable {
 
 	protected abstract void calculate(Order order) throws InterruptedException;
 	protected OrderGUI gui;
-	protected List<OrderMessage> orders = new ArrayList<OrderMessage>();
+	protected BlockingQueue<OrderMessage> orders = new ArrayBlockingQueue<OrderMessage>(10000);
 	public static boolean isrunning = true;
 	public static final boolean AUTOMATIC = true;
 	protected static boolean FULL_CONSOLE_LOG = false;
@@ -32,31 +35,37 @@ public abstract class BaseCalculator implements Runnable {
 		//isrunning = true;
 		while(isrunning) {
 			if(orders.size()>0) {
-				OrderMessage orderMessage = orders.get(0);
+				OrderMessage orderMessage;
+				try {
+					orderMessage = orders.take();
 				Order order = orderMessage.getOrder();
 				
-				try {
-					if(AUTOMATIC || gui==null) {
-						calculate(order);
-						//System.out.println(this.getClass().getName()+" AFTER CALC" + orderMessage);
-//						Thread.sleep((new Random()).nextInt(100)*100);
-					} else {
-						gui.setOrder(order);
-						while(!gui.canCalculate)
-							Thread.sleep(10);
-						gui.canCalculate = false;
-						calculate(order);
-						
-						gui.setAfter(order);
-						while(!gui.canSend)
-							Thread.sleep(10);
-						gui.canSend = false;
+					try {
+						if(AUTOMATIC || gui==null) {
+							calculate(order);
+							//System.out.println(this.getClass().getName()+" AFTER CALC" + orderMessage);
+	//						Thread.sleep((new Random()).nextInt(100)*100);
+						} else {
+							gui.setOrder(order);
+							while(!gui.canCalculate)
+								Thread.sleep(10);
+							gui.canCalculate = false;
+							calculate(order);
+							
+							gui.setAfter(order);
+							while(!gui.canSend)
+								Thread.sleep(10);
+							gui.canSend = false;
+						}
+						send(orderMessage);
+	
+						//orders.remove(orderMessage);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
 					}
-					send(orderMessage);
-
-					orders.remove(orderMessage);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
+				} catch (InterruptedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
 				}
 			}
 			else {
@@ -91,10 +100,13 @@ public abstract class BaseCalculator implements Runnable {
 		if (msg instanceof byte[]) {
 			try {
 				OrderMessage orderMessage = deserializeOrder((byte[]) msg);
-				orders.add(orderMessage);
+				orders.put(orderMessage);
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}

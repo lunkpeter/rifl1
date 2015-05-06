@@ -3,6 +3,8 @@ package rifl6.calculators;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 
 import rifl6.RIFLCore;
 import rifl6.RIFLCore.Command;
@@ -18,7 +20,7 @@ import datamodel.PriceData;
 public class FullPriceCalculator extends BaseCalculator {
 	
 	
-	private List<OrderMessage> delivOrders = new ArrayList<OrderMessage>();
+	private BlockingQueue<OrderMessage> delivOrders = new ArrayBlockingQueue<OrderMessage>(10000);
 	
 	public static int max = 0;
 

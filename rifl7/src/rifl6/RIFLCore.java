@@ -161,6 +161,7 @@ public class RIFLCore {
 							System.err.println("Problem while sending order!");
 							System.err.println(e.getMessage());
 						}
+						Thread.sleep(10);
 					}
 					orders.clear();
 				}
