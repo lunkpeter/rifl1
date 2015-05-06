@@ -42,7 +42,8 @@ public abstract class BaseCalculator implements Runnable {
 				
 					try {
 						if(AUTOMATIC || gui==null) {
-							calculate(order);
+							//calculate(order);
+							order.getCalculationData().add(Logger.getNext()+"");
 							//System.out.println(this.getClass().getName()+" AFTER CALC" + orderMessage);
 	//						Thread.sleep((new Random()).nextInt(100)*100);
 						} else {

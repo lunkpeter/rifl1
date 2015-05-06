@@ -3,6 +3,8 @@ package rifl6.base;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Random;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 
 import com.opencsv.CSVWriter;
 
@@ -14,7 +16,8 @@ public class Logger {
     private static int LOWERBOUND = 1;
     private static int UPPERBOUND = 100;
 	
-	private static String logFilePath = "D:\\rifl_log_egyenletes_1000.csv";
+	private static String logFilePath = "D:\\rifl_log_egyenletes_5000.csv";
+	static BlockingQueue<String[]> queue = new ArrayBlockingQueue<String[]>(10000);
 	
 	
 	
@@ -35,11 +38,21 @@ public class Logger {
 		
 	
 	public static void logOrderTiming(Order order){
+		try {
+			queue.put(order.getCalculationData().toArray(new String[0]));
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	     
+	}
+	public static void flush(){
 		CSVWriter writer;
 		try {
 			writer = new CSVWriter(new FileWriter(logFilePath, true), ';');
-			String[] entries = order.getCalculationData().toArray(new String[0]);
-		    writer.writeNext(entries);
+			for (String[] i : queue) {
+				writer.writeNext(i);
+			}
 			writer.close();
 		} catch (IOException e) {
 			e.printStackTrace();

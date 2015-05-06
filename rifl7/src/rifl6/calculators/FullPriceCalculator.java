@@ -62,7 +62,11 @@ public class FullPriceCalculator extends BaseCalculator {
 								Thread.sleep(100);
 							gui.canCalculate = false;
 						}
-						calculate(delivOrder, priceOrder);
+						//calculate(delivOrder, priceOrder);
+						for (String data : delivOrder.getCalculationData().subList(1, delivOrder.getCalculationData().size())) {
+							priceOrder.getCalculationData().add(data);
+						}
+						priceOrder.getCalculationData().add(Logger.getNext()+"");
 						
 						if(AUTOMATIC || gui == null) {
 							
@@ -106,7 +110,7 @@ public class FullPriceCalculator extends BaseCalculator {
 		}
 		if(max==0) {
 			System.out.println("Finished");
-			RIFLCore.command = Command.exit;
+			Logger.flush();
 		}
 //		if(AUTOMATIC && FULL_CONSOLE_LOG)
 //			System.out.println(msg);
