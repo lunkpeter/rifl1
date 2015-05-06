@@ -43,13 +43,13 @@ public abstract class BaseCalculator implements Runnable {
 					} else {
 						gui.setOrder(order);
 						while(!gui.canCalculate)
-							Thread.sleep(100);
+							Thread.sleep(10);
 						gui.canCalculate = false;
 						calculate(order);
 						
 						gui.setAfter(order);
 						while(!gui.canSend)
-							Thread.sleep(100);
+							Thread.sleep(10);
 						gui.canSend = false;
 					}
 					send(orderMessage);
@@ -61,7 +61,7 @@ public abstract class BaseCalculator implements Runnable {
 			}
 			else {
 				try {
-					Thread.sleep(100);
+					Thread.sleep(10);
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

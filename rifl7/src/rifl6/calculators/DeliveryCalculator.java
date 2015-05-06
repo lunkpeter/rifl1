@@ -37,7 +37,7 @@ public class DeliveryCalculator extends BaseCalculator{
 	
 	protected void calculate(Order order) throws InterruptedException {
 		startTiming();	
-		Thread.sleep(Logger.getNext());
+		int waitTime = Logger.getNext();
 		
 		DeliveryData data = order.getDeliveryData();
 		PriceData priceData = order.getPriceData();
@@ -65,7 +65,7 @@ public class DeliveryCalculator extends BaseCalculator{
 		default:
 			break;
 		}
-		order.getCalculationData().add(endTiming()+"");
+		order.getCalculationData().add((endTiming()+waitTime)+"");
 	}
 
 	@Override

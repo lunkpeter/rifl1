@@ -27,7 +27,7 @@ public class DiscountCalculator extends BaseCalculator {
 
 	protected void calculate(Order order) throws InterruptedException {
 		startTiming();	
-		Thread.sleep(Logger.getNext());
+		int waitTime = Logger.getNext();
 		
 		PriceData data = order.getPriceData();
 		double tempPrice = data.getPrice();
@@ -44,7 +44,7 @@ public class DiscountCalculator extends BaseCalculator {
 			Thread.sleep(1500);
 			a=0;
 		}
-		order.getCalculationData().add(endTiming()+"");
+		order.getCalculationData().add((endTiming()+waitTime)+"");
 
 	}
 

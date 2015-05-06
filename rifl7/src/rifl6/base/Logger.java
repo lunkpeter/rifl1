@@ -12,9 +12,9 @@ public class Logger {
 	private static double MEAN = 200.0f; 
     private static double VARIANCE = 25.0f;
     private static int LOWERBOUND = 1;
-    private static int UPPERBOUND = 300;
+    private static int UPPERBOUND = 100;
 	
-	private static String logFilePath = "D:\\rifl_log.csv";
+	private static String logFilePath = "D:\\rifl_log_egyenletes_1000.csv";
 	
 	
 	
@@ -38,7 +38,7 @@ public class Logger {
 		CSVWriter writer;
 		try {
 			writer = new CSVWriter(new FileWriter(logFilePath, true), ';');
-			String[] entries = order.getCalculationData().toArray(new String[order.getCalculationData().size()]);
+			String[] entries = order.getCalculationData().toArray(new String[0]);
 		    writer.writeNext(entries);
 			writer.close();
 		} catch (IOException e) {

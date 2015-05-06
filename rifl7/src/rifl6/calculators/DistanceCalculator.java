@@ -37,7 +37,7 @@ public class DistanceCalculator extends BaseCalculator{
 	
 	protected void calculate(Order order) throws InterruptedException {
 		startTiming();
-		Thread.sleep(Logger.getNext());
+		int waitTime = Logger.getNext();
 		
 		DeliveryData deliveryData = order.getDeliveryData();
 		CustomerData customerData = order.getCustomerData();
@@ -63,7 +63,7 @@ public class DistanceCalculator extends BaseCalculator{
 			break;
 		}
 		
-		order.getCalculationData().add(endTiming()+"");
+		order.getCalculationData().add((endTiming()+waitTime)+"");
 	}
 
 	@Override

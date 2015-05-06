@@ -38,6 +38,7 @@ public class RIFLCore {
 
 	public static void main(String[] args) {
 		try {
+			
 			BaseCalculator full = new FullPriceCalculator();
 			BaseCalculator net = new NetPriceCalculator(full);
 			BaseCalculator delivPostal = new DeliveryCalculator(full,DeliveryMethod.PostalDelivery);
@@ -87,6 +88,7 @@ public class RIFLCore {
 							input = input.trim();
 							try {
 								int count = Integer.parseInt(input);
+								FullPriceCalculator.max = count;
 								for(int i=0 ; i <count;i++){
 									int random = Logger.getNext(3);
 									switch (random) {

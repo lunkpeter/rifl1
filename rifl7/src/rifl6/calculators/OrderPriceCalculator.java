@@ -26,7 +26,7 @@ public class OrderPriceCalculator extends BaseCalculator {
 	@Override
 	protected void calculate(Order order) throws InterruptedException {
 		startTiming();
-		Thread.sleep(Logger.getNext());
+		int waitTime = Logger.getNext();
 		
 		double tempPrice = 0;
 		for (Item item : order.getItems()) {
@@ -35,7 +35,7 @@ public class OrderPriceCalculator extends BaseCalculator {
 
 		order.getPriceData().setPrice(tempPrice);
 		
-		order.getCalculationData().add(endTiming()+"");
+		order.getCalculationData().add((endTiming()+waitTime)+"");
 	}
 
 	@Override

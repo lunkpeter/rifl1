@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import rifl6.RIFLCore;
+import rifl6.RIFLCore.Command;
 import rifl6.base.BaseCalculator;
 import rifl6.base.Logger;
 import rifl6.base.OrderGUI;
@@ -17,6 +19,8 @@ public class FullPriceCalculator extends BaseCalculator {
 	
 	
 	private List<OrderMessage> delivOrders = new ArrayList<OrderMessage>();
+	
+	public static int max = 0;
 
 	public FullPriceCalculator(){
 		if(!AUTOMATIC)
@@ -32,6 +36,8 @@ public class FullPriceCalculator extends BaseCalculator {
 					OrderMessage delivOrderMessage = null;
 					OrderMessage priceOrderMessage = null;
 
+					Thread.sleep(10);
+					
 					for (OrderMessage dO : delivOrders) {
 						for (OrderMessage pO : orders) {
 							if(dO.getOrder().getId()==pO.getOrder().getId()) {
@@ -89,15 +95,26 @@ public class FullPriceCalculator extends BaseCalculator {
 	@Override
 	protected void send(OrderMessage msg) {
 		msg.setSender(Sender.Full);
-		if(AUTOMATIC && FULL_CONSOLE_LOG)
-			System.out.println(msg);
-		else if (AUTOMATIC && !FULL_CONSOLE_LOG)
-			System.out.println("Finished order: "+msg.getOrder().getId());
+		max--;
+		if(max==(max/100)*100) {
+			System.out.println("Maradt: "+max);
+		}
+		if(max<100) {
+			System.out.println("Maradt: "+max);
+		}
+		if(max==0) {
+			System.out.println("Finished");
+			RIFLCore.command = Command.exit;
+		}
+//		if(AUTOMATIC && FULL_CONSOLE_LOG)
+//			System.out.println(msg);
+//		else if (AUTOMATIC && !FULL_CONSOLE_LOG)
+//			System.out.println("Finished order: "+msg.getOrder().getId());
 	}
 	
 	protected void calculate(Order order, Order priceorder) throws InterruptedException {
 		startTiming();
-		Thread.sleep(Logger.getNext());
+		int waitTime = Logger.getNext();
 		
 		DeliveryData deliveryData = order.getDeliveryData();
 		PriceData priceData = priceorder.getPriceData();
@@ -108,12 +125,11 @@ public class FullPriceCalculator extends BaseCalculator {
 		priceData.setPrice(tempPrice + deliveryData.getDeliveryCost());
 		priceData.setNetPrice(tempNetPrice + deliveryData.getDeliveryCost());
 		
-		for (String data : order.getCalculationData()) {
-			if(!priceorder.getCalculationData().contains(data)){
-				priceorder.getCalculationData().add(data);
-			}
+		// Az elsõt leszámítva az összes kelleni fog (a két ágon lehetnek egyezõ értékek)
+		for (String data : order.getCalculationData().subList(1, order.getCalculationData().size())) {
+			priceorder.getCalculationData().add(data);
 		}
-		priceorder.getCalculationData().add(endTiming()+"");
+		priceorder.getCalculationData().add((endTiming()+waitTime)+"");
 		Logger.logOrderTiming(priceorder);
 	}
 

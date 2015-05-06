@@ -23,12 +23,12 @@ public class NetPriceCalculator extends BaseCalculator {
 
 	protected void calculate(Order order) throws InterruptedException {
 		startTiming();
-		Thread.sleep(Logger.getNext());
+		int waitTime = Logger.getNext();
 		
 		PriceData data = order.getPriceData();
 		data.setNetPrice(data.getPrice() / netModifier);
 		
-		order.getCalculationData().add(endTiming()+"");
+		order.getCalculationData().add((endTiming()+waitTime)+"");
 	}
 
 	@Override
