@@ -16,7 +16,7 @@ public class Logger {
     private static int LOWERBOUND = 1;
     private static int UPPERBOUND = 100;
 	
-	private static String logFilePath = "D:\\rifl_log_egyenletes_5000.csv";
+	private static String logFilePath = "D:\\rifl_log_egyenletes_10000.csv";
 	static BlockingQueue<String[]> queue = new ArrayBlockingQueue<String[]>(10000);
 	
 	

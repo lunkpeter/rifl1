@@ -67,6 +67,7 @@ public class FullPriceCalculator extends BaseCalculator {
 							priceOrder.getCalculationData().add(data);
 						}
 						priceOrder.getCalculationData().add(Logger.getNext()+"");
+						Logger.logOrderTiming(priceOrder);
 						
 						if(AUTOMATIC || gui == null) {
 							
